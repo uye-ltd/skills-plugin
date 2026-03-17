@@ -3,8 +3,7 @@ name: py-trace-vars
 description: Trace the state of variables through a Python code path. Used by Debugger Agent to understand what values exist at the point of failure.
 language: python
 used-by: debugger
----
-
+template: trace-vars
 Trace variable state through the specified code path.
 
 Steps:

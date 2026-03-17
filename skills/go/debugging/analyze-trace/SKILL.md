@@ -3,6 +3,7 @@ name: go-analyze-trace
 description: Analyse a Go stack trace or panic output. Used by Debugger Agent for Go tasks.
 language: go
 used-by: debugger
+template: analyze-trace
 ---
 
 Parse and explain the provided Go panic or error stack trace.

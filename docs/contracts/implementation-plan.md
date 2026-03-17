@@ -1,52 +1,52 @@
 # Contract: Implementation Plan
 
-**Producer**: Planner agent
-**Consumer**: Executor agent
+Produced by: Planner agent
+Consumed by: Executor agent
 
-## Purpose
+## Fields
 
-A concrete, ordered list of steps for the Executor to follow. Each step is atomic, references a specific file, and states what to do and why. The Executor must not deviate from the plan.
+| Field | Required | Type | Description |
+|-------|----------|------|-------------|
+| Objective | yes | string (one sentence) | The end state after all steps complete |
+| Steps | yes | ordered list | At least one step; each references a specific file |
+| Risks / edge cases | yes | list | Use "None identified" if none |
+| Definition of done | yes | checklist | At least two verifiable criteria |
 
-## Schema
+### Step format
 
-```markdown
-## Implementation Plan
+Each step must follow: `[relative/path/file.ext] <ActionVerb> — <why>`
 
-### Objective
-<one sentence describing the end state>
+Valid action verbs: `Add`, `Modify`, `Create`, `Delete`, `Move`, `Rename`
 
-### Steps
-1. [<relative/path/file.ext>] <action verb> — <why>
-2. [<relative/path/file.ext>] <action verb> — <why>
-...
-
-### Risks / edge cases
-- <risk description>: <mitigation>
-
-### Definition of done
-- [ ] <verifiable criterion>
-- [ ] All existing tests pass
-- [ ] Reviewer approves
-```
-
-## Field rules
-
-| Section | Required | Notes |
-|---------|----------|-------|
-| Objective | yes | One sentence only |
-| Steps | yes | At least one; ordered by dependency |
-| Risks / edge cases | yes | Use "None identified" if none |
-| Definition of done | yes | At least two criteria |
-
-## Step format rules
-
-- Each step starts with `[file/path]` — must be a real file or a file to be created
-- Action verbs: `Add`, `Modify`, `Create`, `Delete`, `Move`, `Rename`
-- The "why" explains the business/design reason, not the implementation detail
-- If a step depends on a previous step completing first, note it: `(depends on step 2)`
+The "why" explains the business or design reason, not the implementation detail. If a step depends on a prior step, note it: `(depends on step N)`.
 
 ## Invariants
 
 - Planner must not write code
 - Steps must be independently verifiable — each should leave the code in a runnable state
 - Maximum step scope: one logical concern per step, one file where possible
+- Every file referenced in steps must exist on disk or be explicitly created by a prior step
+
+## Example
+
+```markdown
+## Implementation Plan
+
+### Objective
+Add rate limiting to the login endpoint to prevent brute-force attacks.
+
+### Steps
+1. [src/auth/rate_limit.py] Create — define `RateLimiter` class backed by Redis with a sliding window counter
+2. [src/auth/login.py] Modify — inject `RateLimiter` and reject requests exceeding 5 attempts/minute (depends on step 1)
+3. [tests/auth/test_rate_limit.py] Create — unit tests for `RateLimiter` and integration test for the 429 response (depends on step 1)
+
+### Risks / edge cases
+- Redis unavailable: decide whether to fail open (allow login) or fail closed (reject). Decision: fail open with warning log.
+- Clock skew across instances: sliding window is atomic in Redis so this is safe.
+
+### Definition of done
+- [ ] Login returns 429 after 5 failed attempts within 60 seconds
+- [ ] All existing auth tests pass
+- [ ] RateLimiter is unit-tested with a mock Redis
+- [ ] Reviewer approves
+```

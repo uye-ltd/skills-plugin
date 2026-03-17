@@ -3,5 +3,11 @@
 // Uncomment and set values you want to activate.
 {
   "agent": "language-router",
-  "outputStyle": "Explanatory"
+  "outputStyle": "Explanatory",
+  // "language": null,          // Pin language; skips auto-detection in Language Router
+  "pipeline": {
+    "skipReview": false,        // Skip Reviewer agent (prototyping only)
+    "skipPlanner": false,       // Skip Planner for small tasks
+    "autoPerformance": false    // Run Performance agent automatically after every PASS
+  }
 }

@@ -10,16 +10,35 @@ The pipeline is a sequence of specialised agents that hand off structured output
 ```
 Language Router → Context → Planner → Executor → Reviewer
                                                      │
-                                         ┌───────────┤
-                                         ▼           ▼
-                                     Refactorer   Debugger → Executor (loop)
-                                         │
-                                         ▼
-                                     Performance (on-demand)
+                                         ┌───────────┼───────────┐
+                                         ▼           ▼           ▼
+                                     Refactorer   Debugger   Performance*
+                                                     │
+                                                     ▼
+                                                 Executor (loop)
+
+* Performance triggers when:
+  - Reviewer raises ≥ 2 major perf issues, OR
+  - pipeline.autoPerformance: true in settings.json, OR
+  - Planner detects a hot path, OR
+  - User explicitly requests it
 ```
 
 **Key principle**: agents are language-agnostic. Language Router selects the correct
 skill set for Executor and Reviewer. All other agents use common skills only.
+
+## Configuration
+
+`settings.json` at the plugin root controls default behaviour. Projects can override by shipping their own `settings.json` alongside `.claude-plugin/plugin.json`.
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `agent` | `"language-router"` | Entry-point agent for all requests |
+| `outputStyle` | `"Explanatory"` | Response verbosity: `Explanatory` \| `Concise` |
+| `language` | `null` | Pin language; skips auto-detection in Language Router |
+| `pipeline.skipReview` | `false` | Skip Reviewer agent (prototyping only) |
+| `pipeline.skipPlanner` | `false` | Skip Planner for small tasks |
+| `pipeline.autoPerformance` | `false` | Run Performance agent automatically after every PASS |
 
 ## Repository layout
 

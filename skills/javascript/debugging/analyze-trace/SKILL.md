@@ -3,6 +3,7 @@ name: js-analyze-trace
 description: Analyse a JavaScript or TypeScript stack trace or error. Used by Debugger Agent for JavaScript tasks.
 language: javascript
 used-by: debugger
+template: analyze-trace
 ---
 
 Parse and explain the provided JS/TS error and stack trace.

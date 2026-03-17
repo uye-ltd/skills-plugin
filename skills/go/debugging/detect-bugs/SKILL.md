@@ -3,8 +3,7 @@ name: go-detect-bugs
 description: Scan Go code for bugs. Used by Debugger Agent for proactive bug detection in Go tasks.
 language: go
 used-by: debugger
----
-
+template: detect-bugs
 Perform a bug-focused scan of the provided Go code.
 
 Look for:

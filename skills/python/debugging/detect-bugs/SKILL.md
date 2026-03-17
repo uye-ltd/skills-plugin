@@ -3,8 +3,7 @@ name: py-detect-bugs
 description: Scan Python code for bugs without a specific error to start from. Used by Debugger Agent for proactive bug detection in Python.
 language: python
 used-by: debugger
----
-
+template: detect-bugs
 Perform a bug-focused scan of the provided Python code.
 
 Look specifically for:

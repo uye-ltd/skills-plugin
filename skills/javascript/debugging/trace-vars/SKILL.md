@@ -3,8 +3,7 @@ name: js-trace-vars
 description: Trace variable state through a JavaScript or TypeScript code path. Used by Debugger Agent to understand values at the point of failure.
 language: javascript
 used-by: debugger
----
-
+template: trace-vars
 Trace variable state through the specified code path.
 
 Steps:

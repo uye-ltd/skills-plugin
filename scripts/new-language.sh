@@ -110,9 +110,29 @@ with open(plugin_json_path, "w") as f:
 print(f"  Added {len(to_add)} paths to plugin.json")
 PYEOF
 
+HOOK_SCRIPT="$PLUGIN_DIR/scripts/hooks/format-${LANGUAGE}.sh"
+cat > "$HOOK_SCRIPT" << EOF
+#!/usr/bin/env bash
+# format-${LANGUAGE}.sh — Auto-format ${LANGUAGE} files after Claude writes/edits them.
+# TODO: add formatter command here
+set -euo pipefail
+# Exit silently if formatter not installed
+EOF
+chmod +x "$HOOK_SCRIPT"
+echo "  Created: scripts/hooks/format-${LANGUAGE}.sh (stub — fill in your formatter)"
+
 echo ""
 echo "Done. Next steps:"
 echo "  1. Fill in the SKILL.md files in skills/$LANGUAGE/"
 echo "  2. Add a language-specific agent in agents/ if needed"
-echo "  3. Update hooks/hooks.json to add formatting for .$LANGUAGE files"
+echo "  3. Add a formatting hook for .$LANGUAGE files in hooks/hooks.json:"
+echo ""
+echo "     {"
+echo "       \"type\": \"command\","
+echo "       \"command\": \"\${CLAUDE_PLUGIN_ROOT}/scripts/hooks/format-${LANGUAGE}.sh\""
+echo "     }"
+echo ""
+echo "     Then fill in scripts/hooks/format-${LANGUAGE}.sh with your formatter."
+echo "     See scripts/hooks/format-python.sh for a reference implementation."
+echo ""
 echo "  4. Test with: claude --plugin-dir $PLUGIN_DIR"

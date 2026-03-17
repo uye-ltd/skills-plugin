@@ -3,6 +3,7 @@ name: py-analyze-trace
 description: Analyse a Python stack trace to identify the failure point. Used by Debugger Agent for Python tasks.
 language: python
 used-by: debugger
+template: analyze-trace
 ---
 
 Parse and explain the provided Python stack trace.

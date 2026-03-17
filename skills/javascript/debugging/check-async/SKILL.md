@@ -3,8 +3,7 @@ name: js-check-async
 description: Check JavaScript or TypeScript async/Promise code for correctness. Used by Debugger Agent for JS async bugs.
 language: javascript
 used-by: debugger
----
-
+template: check-async
 Review the provided async JS/TS code for concurrency and correctness issues.
 
 **Rule:** Do **not** suggest fixing async patterns until the failure point is identified.

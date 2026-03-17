@@ -93,6 +93,15 @@ while IFS= read -r skill_file; do
     fi
   done
 
+  # Validate template: field if present
+  if grep -q "^template:" "$skill_file" 2>/dev/null; then
+    tmpl=$(grep "^template:" "$skill_file" | head -1 | sed 's/^template: *//')
+    tmpl_file="$PLUGIN_DIR/skills/templates/${tmpl}.md"
+    if [ ! -f "$tmpl_file" ]; then
+      error "$rel: template '$tmpl' not found at skills/templates/${tmpl}.md"
+    fi
+  fi
+
   # Check for duplicate names
   name=$(grep "^name:" "$skill_file" | head -1 | sed 's/^name: *//')
   if [[ " ${SEEN_NAMES[*]+"${SEEN_NAMES[*]}"} " == *" $name "* ]]; then
@@ -140,6 +149,45 @@ if [ -d "$PLUGIN_DIR/scripts/hooks" ]; then
     fi
   done < <(find "$PLUGIN_DIR/scripts/hooks" -name "*.sh" | sort)
 fi
+echo ""
+
+# ── 6. Contracts ──────────────────────────────────────────────────────────────
+echo "── Contracts ──"
+
+# Map pipeline agent name → expected contract filename (no associative arrays for bash 3.2 compat)
+contract_for_agent() {
+  case "$1" in
+    language-router) echo "routing-block" ;;
+    context)         echo "context-summary" ;;
+    planner)         echo "implementation-plan" ;;
+    executor)        echo "execution-summary" ;;
+    reviewer)        echo "review-report" ;;
+    debugger)        echo "debug-report" ;;
+    refactorer)      echo "refactoring-summary" ;;
+    performance)     echo "performance-report" ;;
+    *)               echo "" ;;
+  esac
+}
+
+while IFS= read -r agent_file; do
+  agent_name=$(grep "^name:" "$agent_file" | head -1 | sed 's/^name: *//')
+  if [ -z "$agent_name" ]; then
+    continue
+  fi
+
+  contract=$(contract_for_agent "$agent_name")
+  if [ -n "$contract" ]; then
+    contract_file="$PLUGIN_DIR/docs/contracts/${contract}.md"
+    if [ ! -f "$contract_file" ]; then
+      error "pipeline agent '$agent_name' is missing contract: docs/contracts/${contract}.md"
+    else
+      green "  $agent_name → docs/contracts/${contract}.md"
+    fi
+  else
+    warning "agent '$agent_name' is not a pipeline agent — no contract required (standalone OK)"
+  fi
+done < <(find "$PLUGIN_DIR/agents" -name "*.md" | sort)
+
 echo ""
 
 # ── Summary ───────────────────────────────────────────────────────────────────

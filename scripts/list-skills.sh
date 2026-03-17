@@ -2,14 +2,14 @@
 # list-skills.sh — List all registered skills grouped by language and subcategory.
 #
 # Usage:
-#   ./scripts/list-skills.sh               # all skills
-#   ./scripts/list-skills.sh python        # filter by language
-#   ./scripts/list-skills.sh --names-only  # just the skill names, one per line
+#   ./scripts/list-skills.sh                      # all skills
+#   ./scripts/list-skills.sh python               # filter by language
+#   ./scripts/list-skills.sh --used-by executor   # filter by consuming agent
+#   ./scripts/list-skills.sh --names-only         # just skill names, one per line
 
 set -euo pipefail
 
 PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-FILTER="${1:-}"
 
 bold()  { printf "\033[1m%s\033[0m\n" "$*"; }
 dim()   { printf "\033[2m%s\033[0m\n" "$*"; }
@@ -17,12 +17,22 @@ cyan()  { printf "\033[36m%s\033[0m" "$*"; }
 
 NAMES_ONLY=false
 LANG_FILTER=""
+USED_BY_FILTER=""
+USED_BY_NEXT=false
 
 for arg in "$@"; do
   case "$arg" in
     --names-only) NAMES_ONLY=true ;;
-    -*) ;;
-    *) LANG_FILTER="$arg" ;;
+    --used-by) USED_BY_NEXT=true ;;
+    -*)  ;;
+    *)
+      if [ "$USED_BY_NEXT" = "true" ]; then
+        USED_BY_FILTER="$arg"
+        USED_BY_NEXT=false
+      else
+        LANG_FILTER="$arg"
+      fi
+      ;;
   esac
 done
 
@@ -45,6 +55,11 @@ while IFS= read -r skill_file; do
   name=$(grep "^name:" "$skill_file" 2>/dev/null | head -1 | sed 's/^name: *//')
   description=$(grep "^description:" "$skill_file" 2>/dev/null | head -1 | sed 's/^description: *//')
   used_by=$(grep "^used-by:" "$skill_file" 2>/dev/null | head -1 | sed 's/^used-by: *//')
+
+  # Apply used-by filter
+  if [ -n "$USED_BY_FILTER" ] && ! echo "$used_by" | grep -q "$USED_BY_FILTER"; then
+    continue
+  fi
 
   if $NAMES_ONLY; then
     echo "$name"

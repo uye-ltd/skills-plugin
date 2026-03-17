@@ -3,8 +3,7 @@ name: go-trace-vars
 description: Trace variable state through a Go code path. Used by Debugger Agent for Go tasks.
 language: go
 used-by: debugger
----
-
+template: trace-vars
 Trace variable state through the specified Go code path.
 
 Steps:

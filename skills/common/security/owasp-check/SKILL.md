@@ -1,25 +1,27 @@
 ---
 name: owasp-check
-description: Review code against the OWASP Top 10 vulnerabilities. Use for security audits of web services, APIs, or any code handling untrusted input.
+description: Review infrastructure, API boundaries, and deployment configuration against the OWASP Top 10. Covers infra-level misconfiguration, vulnerable components, auth failures in config, and SSRF at the network boundary. For code-level injection and cryptographic failures in source code, use the language-specific code-review skill.
 language: common
 used-by: reviewer,standalone
 ---
 
-Review the provided code against the OWASP Top 10 (2021).
+Review the provided infrastructure, API, and configuration artefacts against the OWASP Top 10 (2021) at the infrastructure and API boundary level.
 
-Check for each category:
+**Scope**: infra/API boundary — deployment config, HTTP layer, dependencies, network-level auth.
+**Out of scope**: code-level injection (cat. 3) and cryptographic failures in source code (cat. 2) — use the language-specific `code-review` skill for those.
 
-1. **Broken Access Control** — missing authorisation checks, IDOR, path traversal
-2. **Cryptographic Failures** — weak algorithms, no encryption at rest/transit, hardcoded keys
-3. **Injection** — SQL, NoSQL, OS command, LDAP injection via unsanitised input
-4. **Insecure Design** — missing rate limiting, no abuse prevention, insecure defaults
-5. **Security Misconfiguration** — debug mode in prod, default credentials, verbose errors
-6. **Vulnerable Components** — outdated dependencies with known CVEs (flag versions to check)
-7. **Authentication Failures** — weak passwords allowed, no MFA, broken session management
-8. **Integrity Failures** — unverified deserialization, unsigned updates, unsafe YAML/pickle
-9. **Logging Failures** — insufficient logging of security events, PII in logs
-10. **SSRF** — user-controlled URLs fetched by the server without validation
+Check for each in-scope category:
 
-Output: findings grouped by OWASP category with severity (critical / high / medium / low), file:line, and concrete remediation.
+4. **Insecure Design** — missing rate limiting, no abuse prevention, insecure defaults, lack of defence in depth
+5. **Security Misconfiguration** — debug mode in production, default credentials, verbose error responses, unnecessary features enabled, missing security headers (CSP, HSTS, X-Frame-Options)
+6. **Vulnerable Components** — outdated dependencies with known CVEs; flag package names and versions to check against advisories
+7. **Authentication Failures** — weak password policies, missing MFA, broken session management, insecure token storage
+10. **SSRF** — user-controlled URLs fetched by the server without allowlist validation; internal metadata endpoint exposure
+
+Also check:
+- **Broken Access Control** (cat. 1) — at the API/gateway level: missing authorisation on routes, insecure direct object references via URL parameters, path traversal in file-serving routes
+- **Logging Failures** (cat. 9) — insufficient logging of authentication events, PII in logs, missing audit trail for privileged operations
+
+Output: findings grouped by OWASP category with severity (critical / high / medium / low), location (file:line or config key), and concrete remediation.
 
 $ARGUMENTS

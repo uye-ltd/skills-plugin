@@ -1,52 +1,51 @@
 # Contract: Review Report
 
-**Producer**: Reviewer agent
-**Consumer**: Executor (on ITERATE), Refactorer (on PASS), Debugger (on DEBUG)
+Produced by: Reviewer agent
+Consumed by: Executor (on ITERATE), Refactorer (on PASS), Debugger (on DEBUG)
 
-## Purpose
+## Fields
 
-The Reviewer's verdict on the Executor's output. Drives the pipeline's iteration decision. A single `critical` issue always results in ITERATE.
+| Field | Required | Type | Description |
+|-------|----------|------|-------------|
+| Decision | yes | enum: PASS, ITERATE, DEBUG | Reviewer verdict |
+| Issues found | yes | table | All issues found; use "No issues found" if clean |
+| Test coverage assessment | yes | prose | Whether tests are adequate; list missing scenarios if not |
+| Next step | yes | prose | Exact instruction for the next agent |
 
-## Schema
+### Issues table columns
 
-```markdown
-## Review Report
+| Column | Required | Type | Description |
+|--------|----------|------|-------------|
+| Severity | yes | enum: critical, major, minor, nit | Issue severity |
+| File | yes | path | File containing the issue |
+| Line | yes | number | Line number |
+| Issue | yes | string | Description of the issue |
+| Suggestion | yes | string | Concrete fix suggestion |
+| perf | no | bool | `true` if issue is performance-related (used by Performance agent) |
 
-### Decision: PASS | ITERATE | DEBUG
+## Decision Rules
 
-### Issues found
-| Severity | File | Line | Issue | Suggestion |
-|----------|------|------|-------|------------|
-| critical | path/file.ext | 42 | description | fix suggestion |
-| major    | ...           | .. | ...         | ...          |
-| minor    | ...           | .. | ...         | ...          |
-| nit      | ...           | .. | ...         | ...          |
-
-### Test coverage assessment
-<are the tests adequate? list specific missing scenarios if not>
-
-### Next step
-<exact instruction for the next agent>
-```
-
-## Severity definitions
-
-| Severity | Meaning | Triggers |
-|----------|---------|---------|
-| `critical` | Correctness bug, security issue, or broken contract | Always ITERATE |
-| `major` | Design problem, missing error handling, poor testability | Usually ITERATE |
-| `minor` | Style, naming, missing docs | May be deferred |
-| `nit` | Cosmetic, personal preference | Never blocks |
-
-## Decision rules
+The Reviewer MUST apply these rules in order:
 
 | Condition | Decision |
 |-----------|----------|
-| Any `critical` issue | ITERATE |
-| `major` issues only | ITERATE (default) or PASS at reviewer discretion |
-| `minor` / `nit` only | PASS |
-| Root cause unclear | DEBUG |
-| All criteria met | PASS |
+| Any issue with severity = `critical` | `ITERATE` |
+| `>= 3` issues with severity = `major` | `ITERATE` |
+| Any issue flagged `needs-debug: true` (unclear root cause) | `DEBUG` |
+| Test coverage < threshold AND new code added | `ITERATE` |
+| All issues are `minor` or `nit` only | `PASS` |
+| No issues found | `PASS` |
+
+Rules are evaluated top-to-bottom; the first matching rule wins.
+
+## Severity definitions
+
+| Severity | Meaning |
+|----------|---------|
+| `critical` | Correctness bug, security issue, or broken contract |
+| `major` | Design problem, missing error handling, poor testability |
+| `minor` | Style, naming, missing docs |
+| `nit` | Cosmetic, personal preference |
 
 ## Next step instructions
 
@@ -59,3 +58,24 @@ The Reviewer's verdict on the Executor's output. Drives the pipeline's iteration
 - Reviewer must not fix issues itself — only report
 - Every issue must include file, line reference, and a concrete suggestion
 - Issues table must be present even if empty (use "No issues found")
+- Decision must follow the rule table in order — no discretion on `critical` issues
+
+## Example
+
+```
+## Review Report
+
+### Decision: ITERATE
+
+### Issues found
+| Severity | File | Line | Issue | Suggestion | perf |
+|----------|------|------|-------|------------|------|
+| critical | src/auth.py | 42 | SQL query built via string concat | Use parameterised query | |
+| major | src/auth.py | 78 | Missing await on async DB call | Add await before db.query() | |
+
+### Test coverage assessment
+No test for the error path when credentials are invalid. Add a test for 401 response.
+
+### Next step
+Return to Executor. Fix: (1) parameterise SQL at auth.py:42; (2) add await at auth.py:78.
+```

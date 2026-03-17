@@ -3,8 +3,7 @@ name: js-detect-bugs
 description: Scan JavaScript or TypeScript code for bugs. Used by Debugger Agent for proactive bug detection in JavaScript tasks.
 language: javascript
 used-by: debugger
----
-
+template: detect-bugs
 Perform a bug-focused scan of the provided JS/TS code.
 
 Look for (with severity):

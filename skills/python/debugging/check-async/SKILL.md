@@ -3,8 +3,7 @@ name: py-check-async
 description: Check Python async/await code for correctness. Used by Debugger Agent for Python async bugs.
 language: python
 used-by: debugger
----
-
+template: check-async
 Review the provided async Python code for concurrency and correctness issues.
 
 Check for:
