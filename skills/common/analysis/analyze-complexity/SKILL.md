@@ -10,7 +10,9 @@ Analyse the complexity of the specified code.
 For each function / method:
 1. **Cyclomatic complexity**: count decision points (if/else/switch/loop/try/catch)
 2. **Cognitive complexity**: estimate how hard it is to understand (nesting depth, non-linear jumps, recursion)
-3. **Lines of code**: flag functions over 50 lines
+3. **Lines of code**: two-tier threshold —
+   - > ~30 lines: "review carefully — consider extraction" (matches language-skill refactoring trigger)
+   - > 50 lines: flag as a complexity issue (HIGH or MEDIUM depending on cyclomatic/cognitive score)
 4. **Parameter count**: flag functions with more than 5 parameters
 
 Output:

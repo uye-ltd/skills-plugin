@@ -7,6 +7,9 @@
 
     // Runs ruff format + ruff check --fix after Claude writes or edits a Python file.
     // Requires: ruff (pip install ruff). Exits silently if ruff is not installed.
+    //
+    // Runs prettier (or eslint --fix fallback) after Claude writes or edits a JS/TS file.
+    // Prefers local ./node_modules/.bin/prettier; falls back to global; exits silently if neither found.
     "PostToolUse": [
       {
         "matcher": "Write|Edit",
@@ -14,6 +17,10 @@
           {
             "type": "command",
             "command": "${CLAUDE_PLUGIN_ROOT}/scripts/hooks/format-python.sh"
+          },
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/hooks/format-js.sh"
           }
         ]
       }
