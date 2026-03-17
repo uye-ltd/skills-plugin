@@ -1,0 +1,42 @@
+{
+  "name": "uye",
+  "version": "2.0.0",
+  "description": "Organisation-wide Claude Code plugin — multi-agent pipeline with language routing for Python, JavaScript, and Go.",
+  "author": {
+    "name": "uye",
+    "email": "placeholder@example.com",
+    "url": "https://github.com/uye"
+  },
+  "homepage": "https://github.com/uye/skills-plugin",
+  "repository": "https://github.com/uye/skills-plugin",
+  "license": "MIT",
+  "keywords": ["uye", "python", "javascript", "go", "devops", "multi-agent"],
+  "agents": "./agents",
+  "hooks": "./hooks/hooks.json",
+  "skills": [
+    "./skills/common/navigation",
+    "./skills/common/analysis",
+    "./skills/common/performance",
+    "./skills/common/docs",
+    "./skills/common/devops",
+    "./skills/common/security",
+    "./skills/python/analysis",
+    "./skills/python/generation",
+    "./skills/python/refactoring",
+    "./skills/python/testing",
+    "./skills/python/debugging",
+    "./skills/python/performance",
+    "./skills/javascript/analysis",
+    "./skills/javascript/generation",
+    "./skills/javascript/refactoring",
+    "./skills/javascript/testing",
+    "./skills/javascript/debugging",
+    "./skills/javascript/performance",
+    "./skills/go/analysis",
+    "./skills/go/generation",
+    "./skills/go/refactoring",
+    "./skills/go/testing",
+    "./skills/go/debugging",
+    "./skills/go/performance"
+  ]
+}

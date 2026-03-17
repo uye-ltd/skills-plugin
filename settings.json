@@ -1,0 +1,8 @@
+// settings.json — uye plugin default settings
+// These settings apply when the plugin is enabled in a project.
+// Uncomment and set values you want to activate.
+{
+  // Set a default agent to use as the main thread when this plugin is active.
+  // Must match the "name" field in one of the agents/*.md files.
+  // "agent": "devops-engineer"
+}
