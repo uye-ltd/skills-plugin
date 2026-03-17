@@ -71,17 +71,21 @@ Multi-agent pipeline with language routing for Python, JavaScript, and Go.
               │                        │ apply-types   │
               │                        └───────────────┘
               │
-              │◄── fix ────────────────┐
-              ▼                        │
-      ┌───────────────┐        ┌───────────────┐
-      │   Debugger    │        │  Performance  │  on-demand
-      │ ──────────── │        │ ──────────── │
-      │ analyze-trace │        │ analyze-compl │
-      │ trace-vars    │        │ suggest-cache │
-      │ detect-bugs   │        │ detect-n+1    │
-      │ check-async/  │        │ suggest-vec   │
-      │ check-goroutne│        │ detect-alloc  │
-      └───────────────┘        └───────────────┘
+              │◄── fix ─────────────────────┐
+              ▼                             │
+      ┌───────────────┐             ┌───────────────┐
+      │   Debugger    │             │  Performance† │
+      │ ──────────── │             │ ──────────── │
+      │ analyze-trace │             │ analyze-compl │
+      │ trace-vars    │             │ suggest-cache │
+      │ detect-bugs   │             │ detect-n+1    │
+      │ check-async/  │             │ suggest-vec   │
+      │ check-goroutne│             │ detect-alloc  │
+      └───────────────┘             └───────────────┘
+
+† Performance triggers when: Reviewer raises ≥ 2 major perf issues;
+  pipeline.autoPerformance: true in settings.json and Reviewer issues PASS;
+  Planner detects a hot path; or user explicitly requests it.
 ```
 
 ---
@@ -143,7 +147,7 @@ Reviewer         →  checks code (language-specific)
                          └─► repeat until Reviewer passes
 ```
 
-The loop continues until the Reviewer issues a PASS. Performance analysis is invoked on-demand at any point.
+The loop continues until the Reviewer issues a PASS. Performance analysis is triggered automatically when the Reviewer flags ≥ 2 major perf issues, or when `pipeline.autoPerformance: true` is set; it can also be invoked manually by the Planner or the user at any point.
 
 ---
 
@@ -321,8 +325,9 @@ If the subcategory is new, add it to the `"skills"` array in `.claude-plugin/plu
 
 # List all registered skills grouped by language / subcategory
 ./scripts/list-skills.sh
-./scripts/list-skills.sh python   # filter by language
-./scripts/list-skills.sh --names-only
+./scripts/list-skills.sh python                  # filter by language
+./scripts/list-skills.sh --used-by executor      # filter by consuming agent
+./scripts/list-skills.sh --names-only            # just skill names
 
 # Release a new version
 ./scripts/release.sh <version>
@@ -366,7 +371,7 @@ skills-plugin/
 │   │   ├── performance/              # suggest-cache, detect-n-plus-one
 │   │   ├── docs/                     # docs-write, docs-review, …
 │   │   ├── devops/                   # dockerfile, ci-pipeline, k8s, …
-│   │   └── security/                 # secrets-scan, owasp-check, …
+│   │   └── security/                 # infra/boundary-level: owasp-check, input-validation, …
 │   ├── python/
 │   │   ├── analysis/                 # py-code-review, py-check-bugs
 │   │   ├── generation/               # py-generate-func, py-generate-class, …
@@ -375,7 +380,8 @@ skills-plugin/
 │   │   ├── debugging/                # py-analyze-trace, py-check-async, …
 │   │   └── performance/              # py-suggest-vectorize, py-profile-hotspot
 │   ├── javascript/                   # same 6 subcategories
-│   └── go/                           # same 6 subcategories
+│   ├── go/                           # same 6 subcategories
+│   └── templates/                    # base templates for parallel skill families
 ├── hooks/
 │   └── hooks.json                    # PostToolUse: ruff format+fix on .py files
 ├── scripts/
@@ -389,7 +395,8 @@ skills-plugin/
 │   ├── list-skills.sh                # browse registered skills
 │   ├── release.sh                    # bump version + CHANGELOG
 │   └── hooks/
-│       └── format-python.sh          # PostToolUse: ruff format + ruff check --fix
+│       ├── format-python.sh          # PostToolUse: ruff format + ruff check --fix
+│       └── format-js.sh              # PostToolUse: formatter for JS/TS files
 └── settings.json                     # plugin default settings (JSONC)
 ```
 
@@ -397,7 +404,12 @@ skills-plugin/
 
 ## Hooks
 
-`hooks/hooks.json` has PostToolUse enabled: after every Write or Edit to a `.py`/`.pyi` file, `scripts/hooks/format-python.sh` runs `ruff format` + `ruff check --fix` automatically. Requires [ruff](https://docs.astral.sh/ruff/) to be installed; exits silently if not found.
+`hooks/hooks.json` has PostToolUse enabled for two languages:
+
+- **Python** (`format-python.sh`): after every Write or Edit to a `.py`/`.pyi` file, runs `ruff format` + `ruff check --fix`. Requires [ruff](https://docs.astral.sh/ruff/); exits silently if not found.
+- **JavaScript** (`format-js.sh`): after every Write or Edit to a `.js`/`.ts`/`.jsx`/`.tsx` file.
+
+When scaffolding a new language with `./scripts/new-language.sh`, a stub hook script is created automatically at `scripts/hooks/format-<language>.sh`.
 
 All other hook event types are present and commented out — uncomment to enable.
 

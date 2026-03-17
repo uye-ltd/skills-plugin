@@ -50,7 +50,7 @@ skills/
     navigation/              — read-file, map-project, find-symbol, …
     analysis/                — summarize-module, extract-api, …
     performance/             — suggest-cache, detect-n-plus-one
-    security/                — secrets-scan, owasp-check, …
+    security/                — infra/boundary-level: owasp-check, input-validation, …
     docs/                    — docs-write, docs-review, …
     devops/                  — dockerfile, ci-pipeline, k8s, …
   python/ javascript/ go/    — language-specific skills
@@ -60,6 +60,7 @@ skills/
     testing/                 — generate-test, …         (used by Executor + Reviewer)
     debugging/               — analyze-trace, …         (used by Debugger)
     performance/             — language-specific perf   (used by Performance)
+  templates/                 — base templates for parallel skill families (analyze-trace, detect-bugs, …)
 docs/contracts/              — input/output schemas for each agent handoff
 hooks/hooks.json             — hook configuration (JSONC)
 scripts/                     — install, scaffold, validate, release utilities
@@ -92,6 +93,7 @@ name: <language>-<skill-name>        # unique across the plugin; prefix with lan
 description: <what it does and when Claude should invoke it>
 language: python | javascript | go | common
 used-by: executor | reviewer | refactorer | debugger | performance | context | planner | standalone
+# template: <template-name>          # optional — references skills/templates/<name>.md
 # disable-model-invocation: false    # optional — set true to prevent auto-invocation
 ---
 ```
@@ -102,6 +104,7 @@ Rules:
 - The `description` is used by Claude to decide when to invoke the skill — be specific
 - `$ARGUMENTS` captures user-provided input; always include it at the end of the prompt
 - Keep prompts actionable: tell Claude what to do, what to output, what format to use
+- If a skill is part of a parallel family (e.g. `analyze-trace` exists in py/js/go), set `template:` to the shared base in `skills/templates/` and keep only language-specific details in the skill body. `validate.sh` checks that the referenced template exists.
 
 Scaffold: `./scripts/new-skill.sh <language|common> <subcategory> <skill-name>`
 
@@ -146,11 +149,20 @@ Then fill in the generated placeholder SKILL.md files.
 ## Testing changes
 
 ```bash
-# Validate plugin structure (frontmatter, paths, plugin.json consistency)
+# Validate plugin structure:
+#   - frontmatter (name, description, language, used-by)
+#   - template: references exist in skills/templates/
+#   - all skill paths in plugin.json exist on disk
+#   - each pipeline agent has a matching contract in docs/contracts/
+#   - hook scripts are executable
 ./scripts/validate.sh
+./scripts/validate.sh --strict    # treat warnings as errors
 
 # List all registered skills
 ./scripts/list-skills.sh
+./scripts/list-skills.sh python                  # filter by language
+./scripts/list-skills.sh --used-by executor      # filter by consuming agent
+./scripts/list-skills.sh --names-only            # just skill names
 
 # Test plugin locally without installing
 claude --plugin-dir /path/to/skills-plugin
@@ -162,8 +174,12 @@ claude --plugin-dir /path/to/skills-plugin
 ## Hooks
 
 Hooks are configured in `hooks/hooks.json` (JSONC). Hook scripts live in `scripts/hooks/`
-and must be executable. The `PostToolUse` hook for Python files runs `ruff format` + `ruff check --fix`
-automatically when Claude writes or edits a `.py` file.
+and must be executable. Two hooks are active:
+
+- **Python** (`format-python.sh`): runs `ruff format` + `ruff check --fix` after any Write or Edit to a `.py`/`.pyi` file
+- **JavaScript** (`format-js.sh`): runs after any Write or Edit to a `.js`/`.ts`/`.jsx`/`.tsx` file
+
+When adding a new language, `./scripts/new-language.sh` creates a stub hook script at `scripts/hooks/format-<language>.sh` automatically.
 
 ## Releasing
 
