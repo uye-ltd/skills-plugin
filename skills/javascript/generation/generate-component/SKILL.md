@@ -16,6 +16,14 @@ Guidelines:
 - Decompose into sub-components if complex
 - Add JSDoc on the component and non-obvious props
 
+**Component standards:**
+- Component names: PascalCase; props interface named `<ComponentName>Props`
+- No business logic in components — delegate to custom hooks or services
+- `key` prop must be stable (not array index unless list is static and never reordered)
+- Never mutate props
+- Avoid inline object/array creation in JSX (new reference every render)
+- No direct DOM manipulation; use React refs only when necessary
+
 Include a usage example.
 
 $ARGUMENTS

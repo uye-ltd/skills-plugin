@@ -7,6 +7,8 @@ used-by: performance
 
 Identify sources of unnecessary heap allocations in the provided Go code.
 
+**Rule #0: Measure before optimising.** Required profiling commands: `go test -bench -benchmem`, `go build -gcflags="-m"` (escape analysis). Do not suggest allocation fixes without evidence.
+
 Look for:
 - Interface boxing: values assigned to `interface{}` / `any` causing heap escape
 - Closures capturing loop variables (each iteration may allocate)
@@ -14,10 +16,11 @@ Look for:
 - String concatenation in a loop → use `strings.Builder`
 - Returning pointers to stack values unnecessarily (forces heap allocation)
 - Small structs passed by pointer instead of value when value would stay on stack
+- Hardcoded buffer sizes / magic timeout values that could mask performance regressions
 
 For each allocation:
 1. Location and cause
-2. Expected allocation per call
+2. Expected allocation per call (from profiling evidence)
 3. Fix and expected allocation reduction
 4. Verification: `go test -bench -benchmem` and `go build -gcflags="-m"` to see escape analysis
 

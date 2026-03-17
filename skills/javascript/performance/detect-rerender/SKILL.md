@@ -7,6 +7,8 @@ used-by: performance
 
 Identify components that re-render more than necessary.
 
+**Precondition:** Require React DevTools Profiler evidence before recommending memoization — do not suggest `React.memo` / `useMemo` / `useCallback` without profiler data showing unnecessary renders.
+
 Look for:
 - Objects or arrays created inline in JSX (`style={{ }}`, `value={[]}`) — new reference every render
 - Functions defined inline in JSX (`onClick={() => ...}`) without `useCallback`

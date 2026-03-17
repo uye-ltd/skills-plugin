@@ -7,12 +7,14 @@ used-by: executor
 
 Update the import statements for the specified Go file.
 
-Rules (goimports-compatible):
-- Group: stdlib → external packages → internal packages, separated by blank lines
-- Remove unused imports
-- Use import aliases only when package names conflict
-- Prefer the full module path for internal packages
-- Run `goimports` or `gofmt` mentally — produce the same output
+Rules:
+1. goimports-compatible grouping: stdlib → external packages → internal packages, separated by blank lines
+2. Remove unused imports
+3. No dot imports (`. "pkg"`) except in test files where idiomatic
+4. Blank `_` imports only for side effects; always add a comment explaining why
+5. Import aliases only when package names conflict; avoid unclear abbreviations
+6. Prefer the full module path for internal packages
+7. Run `goimports` or `gofmt` mentally — produce the same output
 
 Output the complete updated import block plus a summary: added, removed, reorganised.
 

@@ -9,10 +9,10 @@ Trace variable state through the specified code path.
 
 Steps:
 1. Identify variables relevant to the bug
-2. Walk through the code path, tracking value changes
-3. Flag implicit type coercions (`==`, `+` string/number, falsy checks)
+2. Walk through the code path, tracking value changes — explicitly trace: inputs → transformation → outputs at each step
+3. Flag implicit type coercions (`==`, `+` string/number, falsy checks) — track type coercions at each operation
 4. Track `undefined` / `null` propagation through optional chaining and nullish coalescing
-5. Note any async state changes (values that change after `await`)
+5. Note any async state changes (values that change after `await`) — for async paths, trace state at each `await` boundary
 
 Output: annotated code path showing each variable's value at each step, highlighting the divergence point.
 

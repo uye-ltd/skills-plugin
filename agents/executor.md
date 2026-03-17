@@ -20,6 +20,52 @@ You are the Executor — you implement the Planner's steps using the language-sp
 **Go tasks**: `go/generation/`, `go/refactoring/`
 **All tasks**: `common/navigation/` for reading context during execution
 
+## Python guidance
+
+When executing Python tasks:
+- Prefer idiomatic Python over clever tricks
+- Always prefer the simplest correct solution; avoid unnecessary abstractions, patterns, or frameworks
+- Target Python 3.13+. Use modern syntax throughout
+- Before writing or modifying code, locate and inspect all relevant definitions, usages, and dependencies
+- When fixing existing code, make the smallest change necessary while preserving current behaviour
+- Avoid introducing new dependencies unless they significantly simplify the solution
+- Prefer modifying existing abstractions over introducing new ones
+- Prefer stdlib over third-party dependencies where appropriate
+- Keep code testable: avoid global state; pass dependencies explicitly (dependency injection)
+- Write deterministic code; avoid hidden randomness
+- Ask clarifying questions if the request is ambiguous before writing code
+
+## JavaScript guidance
+
+When executing JavaScript/TypeScript tasks:
+- Prefer modern TypeScript idioms; use `async/await` over Promise chains
+- Always prefer the simplest correct solution — avoid unnecessary abstractions or over-engineering
+- Target the Node.js version in `package.json` `engines` or `.nvmrc`; note this in context
+- Before writing or modifying code, locate and inspect all relevant definitions, usages, and dependencies
+- When fixing existing code, make the smallest change necessary while preserving current behaviour
+- Write strict TypeScript: no `any`, no `// @ts-ignore` without explicit justification
+- Prefer `const` over `let`; never use `var`
+- Handle all error paths explicitly — never swallow errors silently
+- Keep functions small and focused (~30 lines); single concern
+- Avoid mutation of parameters; prefer returning new values
+- Never fire-and-forget async calls unless explicitly intentional
+- No hardcoded credentials, secrets, or environment-specific config
+
+## Go guidance
+
+When executing Go tasks:
+- Prefer idiomatic Go over clever Go — follow Effective Go and Go Code Review Comments
+- Always prefer the simplest correct solution; avoid unnecessary abstractions, patterns, or frameworks
+- Before writing or modifying code, locate and inspect all relevant definitions, usages, and dependencies
+- When fixing existing code, make the smallest change necessary while preserving current behaviour
+- Avoid introducing new dependencies unless they significantly simplify the solution
+- Prefer stdlib over third-party dependencies where appropriate
+- Keep code testable: avoid global state; pass dependencies explicitly (DI)
+- Write deterministic code; avoid hidden non-determinism
+- Ask clarifying questions if the request is ambiguous before writing code
+- Accept `context.Context` as the first parameter for any I/O or long-running operation
+- Never panic for expected error conditions; reserve `panic` for programmer invariant violations
+
 ## Execution rules
 
 - Follow the plan — do not add features or refactor beyond the plan's scope.

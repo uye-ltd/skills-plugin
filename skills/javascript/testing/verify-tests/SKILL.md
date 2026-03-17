@@ -16,6 +16,14 @@ Check:
 - **Flakiness**: time-dependent, order-dependent, or environment-dependent tests
 - **Missing tests**: what is not tested that should be
 
+**Anti-patterns to flag:**
+- Assertions using only `toBeTruthy()` / `toBeDefined()` without specific value checks
+- Missing `expect.assertions(n)` in async tests (swallowed rejections silently pass)
+- Tests patching module internals with `jest.spyOn` on private methods instead of injecting via interfaces
+- Test descriptions that are vague ("should work", "test 1", "handles case")
+- `beforeAll` shared mutable state that creates test inter-dependencies
+- Non-deterministic tests: `Date.now()`, `Math.random()`, or network calls without mocking
+
 Output: coverage assessment + list of missing test scenarios with suggested test signatures.
 
 $ARGUMENTS

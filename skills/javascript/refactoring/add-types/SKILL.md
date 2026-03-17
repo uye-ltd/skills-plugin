@@ -15,6 +15,8 @@ Guidelines:
 - Use `as const` for literal objects/arrays
 - Use `readonly` on arrays and object properties that should not be mutated
 - Add `ReturnType<>` / `Parameters<>` for derived types rather than duplicating
+- Use `satisfies` operator for objects where you want type-checking but want to preserve literal types
+- No `!` non-null assertion without justification — use optional chaining or explicit null checks
 
 Note any places where the JS code structure makes typing difficult and suggest refactoring.
 

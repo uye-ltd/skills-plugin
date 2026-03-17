@@ -7,6 +7,11 @@ used-by: debugger
 
 Parse and explain the provided JS/TS error and stack trace.
 
+**Rules:**
+- Do **not** emit a "Fix" section until the Root Cause section is complete
+- After walking the stack, trace the full execution path: inputs → transformation → outputs — confirm where state diverges from expected
+- For async errors: trace the Promise chain from initiation to failure — identify at which `.then()`/`await` the error was swallowed or re-thrown
+
 Steps:
 1. Identify the error type and message
 2. Walk the stack from origin to failure point

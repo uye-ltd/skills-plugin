@@ -8,16 +8,20 @@ used-by: reviewer
 Perform a correctness-focused scan of the provided Go code.
 
 Check for:
-- Ignored error return values
+- Ignored error return values (blank `_` or no check at all) → **critical**
+- `defer` inside a loop (defers until function return, not iteration end) → bug
+- Goroutine leak: goroutine with no exit path or no context cancellation check → **critical**
+- Data race: shared map/slice/struct written from multiple goroutines without sync → **critical**
+- Nil map write (writing to an uninitialized `map`) → runtime panic
+- Slice `append` result discarded: `append(s, x)` without assignment back to `s`
+- `sync.Mutex` or `sync.WaitGroup` copied by value (passed by value to function or assigned)
+- Type assertion without ok check: `v := x.(T)` panics if wrong type; use `v, ok := x.(T)`
+- Context not propagated through call chain (hardcoded `context.Background()` mid-stack)
+- Error context lost: error passed through without `%w`, losing the chain
 - Nil pointer dereferences (missing nil checks after type assertions, interface returns)
-- Incorrect `defer` in loops (all deferred until function return, not loop iteration)
 - Integer overflow in arithmetic
-- Goroutine leaks (goroutines started but never stopped)
-- Incorrect use of `sync.Mutex` (copy of mutex by value, unlock without lock)
-- Map access in concurrent code without synchronisation
 - Slice/string indexing without bounds checks
-- Context not passed or cancelled correctly
 
-For each bug: file:line, description, and minimal fix.
+For each bug: file:line, description, severity, and minimal fix.
 
 $ARGUMENTS

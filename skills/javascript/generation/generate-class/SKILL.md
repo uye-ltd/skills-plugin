@@ -15,6 +15,14 @@ Requirements:
 - Immutability by default (use `readonly` where appropriate)
 - Prefer composition over inheritance unless inheritance is clearly appropriate
 
+**Class standards:**
+- Class names: PascalCase nouns (`OrderService`, `UserStore`)
+- Constructor accepts interfaces (not concrete deps) — dependency injection
+- Single responsibility: if the class handles multiple concerns, split it
+- Prefer `readonly` for properties that don't change after construction
+- Implement relevant interfaces explicitly (makes the contract visible)
+- No static mutable state
+
 Include a minimal usage example.
 
 $ARGUMENTS

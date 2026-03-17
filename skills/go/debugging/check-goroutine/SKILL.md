@@ -16,9 +16,13 @@ Check for:
 - `sync.Mutex` copied by value
 - Context cancellation not checked inside goroutine loops
 - `select` with no `default` that could block indefinitely
+- Blocking call patterns that cause starvation or deadlock: channel receive with no `select default`, `sync.Mutex.Lock()` held while doing I/O, `time.Sleep` used as synchronisation
+- Missing resource cleanup: `defer conn.Close()`, `defer cancel()`, `defer wg.Done()` — flag when absent
 
 For each issue: location, problem, and correct concurrent pattern.
 
 Always suggest running with `-race` flag to confirm data races.
+
+**Profiling/tooling:** suggest `go tool trace` for goroutine scheduling analysis; `GOTRACEBACK=all` for a full goroutine dump when diagnosing hangs.
 
 $ARGUMENTS

@@ -7,6 +7,10 @@ used-by: performance
 
 Identify where memoisation would improve performance.
 
+**Rule #0: Measure before optimising.** Memoization has a cost: memory usage, staleness risk, and added code complexity.
+
+**Precondition:** Require profiling evidence (React Profiler, performance trace, or benchmark) before recommending memoization — premature memoization adds complexity and memory overhead without guaranteed benefit.
+
 Look for:
 - Expensive pure functions called repeatedly with the same arguments → `useMemo` / `useCallback` / `memoize`
 - Derived data recalculated on every render from stable inputs → `useMemo`

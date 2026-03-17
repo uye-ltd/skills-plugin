@@ -16,6 +16,14 @@ Check:
 - **Benchmarks**: are performance-sensitive functions benchmarked?
 - **Missing tests**: what is not covered that should be?
 
+Also flag:
+- Non-deterministic tests: `time.Sleep` for sync, unseeded `rand`, external state dependencies
+- Tests that patch global variables instead of using interfaces
+- Subtests with vague names ("case 1", "test A")
+- Error assertions that only check `!= nil` without type or message inspection
+- Missing `-race` annotation or note for concurrent code tests
+- Shared mutable state between table-driven test cases
+
 Output: coverage assessment + list of missing test scenarios with suggested function signatures.
 
 $ARGUMENTS

@@ -15,5 +15,10 @@ Guidelines:
 - Structure: `describe` by unit, `it`/`test` by scenario
 - Cover: happy paths, error states, edge cases, async flows
 - For async: `async/await`; test both resolved and rejected cases
+- Tests must be deterministic: mock `Date`, `Math.random`, and timers — no implicit external state
+- `it`/`test` names describe scenario and expected outcome, not the implementation ("should work" → bad)
+- Use `expect.assertions(n)` or `expect.hasAssertions()` for async tests to catch swallowed rejections
+- Inline comments explain *why* an edge case is tested, not *what* the test does
+- Use `beforeEach` to reset mocks; never rely on test execution order
 
 $ARGUMENTS

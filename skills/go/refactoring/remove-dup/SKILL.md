@@ -7,6 +7,12 @@ used-by: refactorer
 
 Identify and eliminate code duplication.
 
+Rules:
+- Before introducing a new abstraction, check if an existing one can be extended
+- Prefer the simplest abstraction that removes the duplication
+- When extracting to a shared function, preserve error propagation — don't lose error context
+- Minimal targeted change — don't restructure surrounding code
+
 Steps:
 1. Find duplicate or near-duplicate code blocks
 2. Determine the right abstraction (shared function, interface + single implementation, generic function with `comparable`/`any` constraints)

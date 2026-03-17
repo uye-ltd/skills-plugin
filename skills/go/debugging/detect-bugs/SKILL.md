@@ -17,7 +17,13 @@ Look for:
 - Integer overflow
 - Incorrect mutex usage (copy by value, unlock of unlocked mutex)
 - Missing context cancellation propagation
+- Error wrapping gaps: errors passed through without `%w`, losing the chain for `errors.Is`/`errors.As`
+- Goroutines without exit paths or context cancellation checks
+- `sync.Mutex`/`sync.WaitGroup` copied by value
+- Race-prone patterns: concurrent map/slice writes without synchronisation
+- Type assertion without ok check: `v := x.(T)` panics on wrong type
+- Hardcoded config values or credentials that could cause production bugs
 
-For each bug: file:line, description, and minimal fix.
+For each bug: file:line, description, severity, and minimal fix.
 
 $ARGUMENTS

@@ -7,10 +7,20 @@ used-by: refactorer
 
 Rename the specified symbol consistently across the codebase.
 
+**Naming conventions (pre-rename checklist):**
+- Variables and functions: camelCase (`processOrder`, `userData`)
+- Classes, interfaces, types, enums: PascalCase (`OrderService`, `UserProps`)
+- Constants: UPPER_SNAKE_CASE for module-level, camelCase for local
+- React components: PascalCase
+- Custom hooks: `use` prefix + camelCase body (`useOrderState`)
+- Boolean variables: `is/has/should` prefix (`isLoading`, `hasError`)
+- No vague names (`data`, `temp`, `info`, `mgr`)
+- No negated boolean names (`isNotLoading` → `isLoaded`)
+
 Steps:
 1. Find the canonical definition
 2. Find all references (imports, calls, JSX usage, type annotations, tests)
-3. Propose the new name with rationale
+3. Propose the new name with rationale (verify it follows the conventions above)
 4. Apply the rename at definition and all reference sites
 5. Update any string references (e.g. in event names, CSS class names, test IDs)
 6. Note if a deprecation alias is needed
