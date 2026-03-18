@@ -69,7 +69,7 @@ for repo in "${REPOS[@]}"; do
     continue
   fi
 
-  if (cd "$repo" && claude plugin install "$PLUGIN_DIR" --scope project > /dev/null 2>&1); then
+  if (claude plugin marketplace add "$PLUGIN_DIR" --scope user > /dev/null 2>&1 && cd "$repo" && claude plugin install uye --scope project > /dev/null 2>&1); then
     printf "\033[32m✔ %-50s updated\033[0m\n" "$repo"
     ((SUCCESS++)) || true
   else
@@ -82,6 +82,8 @@ echo ""
 echo "Done: $SUCCESS updated, $FAILED failed"
 
 if [ "$FAILED" -gt 0 ]; then
-  echo "Run manually for failed repos: claude plugin install '$PLUGIN_DIR' --scope project"
+  echo "Run manually for failed repos:"
+  echo "  claude plugin marketplace add '$PLUGIN_DIR' --scope user"
+  echo "  cd <repo> && claude plugin install uye --scope project"
   exit 1
 fi

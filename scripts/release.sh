@@ -31,6 +31,7 @@ if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?$ ]]; then
 fi
 
 PLUGIN_JSON="$PLUGIN_DIR/.claude-plugin/plugin.json"
+MARKETPLACE_JSON="$PLUGIN_DIR/.claude-plugin/marketplace.json"
 CHANGELOG="$PLUGIN_DIR/CHANGELOG.md"
 TODAY=$(date +%Y-%m-%d)
 
@@ -60,6 +61,21 @@ with open(path, "w") as f:
     f.write("\n")
 PYEOF
 echo "  ✔ Bumped version in plugin.json"
+
+# ── 3b. Bump version in marketplace.json ──────────────────────────────────────
+python3 - "$MARKETPLACE_JSON" "$VERSION" << 'PYEOF'
+import sys, json
+path, version = sys.argv[1], sys.argv[2]
+with open(path) as f:
+    data = json.load(f)
+data["version"] = version
+for plugin in data.get("plugins", []):
+    plugin["version"] = version
+with open(path, "w") as f:
+    json.dump(data, f, indent=2)
+    f.write("\n")
+PYEOF
+echo "  ✔ Bumped version in marketplace.json"
 
 # ── 4. Get commits since last tag ─────────────────────────────────────────────
 cd "$PLUGIN_DIR"
@@ -108,7 +124,7 @@ echo "  1. Edit CHANGELOG.md — fill in Added / Changed / Fixed sections"
 echo "  2. Review changes:"
 echo "     git diff"
 echo "  3. Commit and tag:"
-echo "     git add .claude-plugin/plugin.json CHANGELOG.md"
+echo "     git add .claude-plugin/plugin.json .claude-plugin/marketplace.json CHANGELOG.md"
 echo "     git commit -m \"chore: release v$VERSION\""
 echo "     git tag v$VERSION"
 echo "  4. Push and update org repos:"

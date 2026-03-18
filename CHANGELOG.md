@@ -1,7 +1,27 @@
+## [0.2.0] - 2026-03-18
+
+### Added
+- TODO: list new skills, agents, or features
+
+### Changed
+- TODO: list modified behaviour
+
+### Fixed
+- TODO: list bug fixes
+
+### Commits since 
+- 5d33ba8 refactor: major refactor
+- bb3fff5 refactor: major refactor
+- b73ea4e feat: common skills and agents clenup
+- 52a840a feat: styleguide for python, go, js
+- e7ca22a feat: initial structure
+- 4a42a34 Initial commit
+
 # Changelog
 
 All notable changes to this plugin will be documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+
 Versioning follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]

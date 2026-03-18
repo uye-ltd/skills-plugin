@@ -30,14 +30,26 @@ fi
 echo "Installing uye plugin..."
 echo "  Plugin:  $PLUGIN_DIR"
 echo "  Target:  $TARGET"
-echo "  Scope:   project"
 echo ""
 
+# Step 1 — Register the plugin dir as a user-scoped marketplace (once per machine)
+echo "Registering plugin as marketplace (user scope)..."
+claude plugin marketplace add "$PLUGIN_DIR" --scope user
+
+# Step 2 — Install the plugin at project scope in the target repo
+echo "Installing uye plugin at project scope in $TARGET..."
 cd "$TARGET"
-claude plugin install "$PLUGIN_DIR" --scope project
+claude plugin install uye --scope project
 
 echo ""
-echo "Done. The plugin has been added to $TARGET/.claude/settings.json"
-echo "Commit that file to share the plugin with your team:"
+echo "Done. Two things happened:"
+echo "  1. $PLUGIN_DIR registered as a marketplace in your user config (~/.claude/)"
+echo "     Re-running install.sh is safe — marketplace registration is idempotent."
+echo "  2. The 'uye' plugin installed at project scope in $TARGET/.claude/settings.json"
+echo ""
+echo "Commit the settings file to share the plugin with your team:"
 echo ""
 echo "  git add .claude/settings.json && git commit -m 'chore: add uye claude plugin'"
+echo ""
+echo "Note: each developer needs to run install.sh once (or any install) to register"
+echo "the marketplace on their machine before the plugin activates for them."

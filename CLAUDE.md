@@ -62,7 +62,7 @@ skills/
     performance/             — language-specific perf   (used by Performance)
   templates/                 — base templates for parallel skill families (analyze-trace, detect-bugs, …)
 docs/contracts/              — input/output schemas for each agent handoff
-hooks/hooks.json             — hook configuration (JSONC)
+hooks/hooks.json             — hook configuration (JSON)
 scripts/                     — install, scaffold, validate, release utilities
 ```
 
@@ -173,7 +173,7 @@ claude --plugin-dir /path/to/skills-plugin
 
 ## Hooks
 
-Hooks are configured in `hooks/hooks.json` (JSONC). Hook scripts live in `scripts/hooks/`
+Hooks are configured in `hooks/hooks.json`. Hook scripts live in `scripts/hooks/`
 and must be executable. Two hooks are active:
 
 - **Python** (`format-python.sh`): runs `ruff format` + `ruff check --fix` after any Write or Edit to a `.py`/`.pyi` file

@@ -255,14 +255,36 @@ Skills are invoked as `/uye:<skill-name>` or automatically by the pipeline agent
 
 ## Installation
 
-```bash
-# Install into a repo at project scope (commits to .claude/settings.json)
-./scripts/install.sh /path/to/your-repo
+### Single repo
 
-# Install across multiple repos
+```bash
+cd /path/to/skills-plugin
+./scripts/install.sh /path/to/your-repo
+```
+
+This does two things:
+1. Registers the plugin as a marketplace in your user Claude config (once per machine)
+2. Installs the `uye` plugin at project scope in `.claude/settings.json` of the target repo
+
+Commit `.claude/settings.json` to share the plugin with your team:
+```bash
+git add .claude/settings.json && git commit -m 'chore: add uye claude plugin'
+```
+
+> **Each developer** needs to run `install.sh` (or `update.sh`) once on their machine
+> to register the marketplace. The committed `settings.json` activates the plugin once
+> the marketplace is registered locally.
+
+### Multiple repos
+
+```bash
 ./scripts/update.sh /path/to/repo1 /path/to/repo2
 ./scripts/update.sh --from-file repos.txt
+```
 
+### Local testing (no install)
+
+```bash
 # Test locally without installing
 claude --plugin-dir /path/to/skills-plugin
 

@@ -1,15 +1,5 @@
-// hooks/hooks.json — uye plugin hook configuration (JSONC)
-// Hook types: "command" | "prompt" | "agent"
-// Scripts must be executable: chmod +x scripts/hooks/<name>.sh
-// Use ${CLAUDE_PLUGIN_ROOT} for all paths inside hook commands.
 {
   "hooks": {
-
-    // Runs ruff format + ruff check --fix after Claude writes or edits a Python file.
-    // Requires: ruff (pip install ruff). Exits silently if ruff is not installed.
-    //
-    // Runs prettier (or eslint --fix fallback) after Claude writes or edits a JS/TS file.
-    // Prefers local ./node_modules/.bin/prettier; falls back to global; exits silently if neither found.
     "PostToolUse": [
       {
         "matcher": "Write|Edit",
@@ -25,76 +15,5 @@
         ]
       }
     ]
-
-    // Fires before Claude uses any tool.
-    // "PreToolUse": [
-    //   {
-    //     "matcher": "Write|Edit",
-    //     "hooks": [
-    //       {
-    //         "type": "command",
-    //         "command": "${CLAUDE_PLUGIN_ROOT}/scripts/hooks/pre-tool-use.sh"
-    //       }
-    //     ]
-    //   }
-    // ],
-
-    // Fires after a tool fails.
-    // "PostToolUseFailure": [
-    //   {
-    //     "matcher": ".*",
-    //     "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/hooks/post-tool-failure.sh" }]
-    //   }
-    // ],
-
-    // Fires when Claude Code shows a permission dialog.
-    // "PermissionRequest": [
-    //   {
-    //     "matcher": ".*",
-    //     "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/hooks/permission-request.sh" }]
-    //   }
-    // ],
-
-    // Fires when the user submits a prompt.
-    // "UserPromptSubmit": [
-    //   {
-    //     "matcher": ".*",
-    //     "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/hooks/user-prompt-submit.sh" }]
-    //   }
-    // ],
-
-    // Fires when Claude Code sends a notification.
-    // "Notification": [
-    //   {
-    //     "matcher": ".*",
-    //     "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/hooks/notification.sh" }]
-    //   }
-    // ],
-
-    // Fires when Claude attempts to stop.
-    // "Stop": [
-    //   {
-    //     "matcher": ".*",
-    //     "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/hooks/stop.sh" }]
-    //   }
-    // ],
-
-    // Fires when a subagent starts / stops.
-    // "SubagentStart": [{ "matcher": ".*", "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/hooks/subagent-start.sh" }] }],
-    // "SubagentStop":  [{ "matcher": ".*", "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/hooks/subagent-stop.sh" }]  }],
-
-    // Fires at session start / end.
-    // "SessionStart": [{ "matcher": ".*", "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/hooks/session-start.sh" }] }],
-    // "SessionEnd":   [{ "matcher": ".*", "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/hooks/session-end.sh" }]   }],
-
-    // Fires when a teammate is about to go idle.
-    // "TeammateIdle": [{ "matcher": ".*", "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/hooks/teammate-idle.sh" }] }],
-
-    // Fires when a task is marked completed.
-    // "TaskCompleted": [{ "matcher": ".*", "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/hooks/task-completed.sh" }] }],
-
-    // Fires before conversation history is compacted.
-    // "PreCompact": [{ "matcher": ".*", "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/hooks/pre-compact.sh" }] }]
-
   }
 }
