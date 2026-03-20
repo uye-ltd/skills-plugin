@@ -1,0 +1,37 @@
+{
+  "name": "kibana",
+  "description": "Data visualisation and exploration UI for Elasticsearch \u2014 dashboards, Discover, Lens, Maps, and alerting",
+  "docs": {
+    "url": "https://www.elastic.co/docs",
+    "sections": [
+      "reference",
+      "discover",
+      "dashboard",
+      "visualize",
+      "maps",
+      "alerting",
+      "management",
+      "management/index-patterns",
+      "management/index-lifecycle-policies",
+      "setup",
+      "security"
+    ]
+  },
+  "github": {
+    "org": "elastic",
+    "repo": "kibana",
+    "branch": "main"
+  },
+  "examples": [
+    "index patterns",
+    "dashboards",
+    "Lens visualisations",
+    "Discover queries",
+    "alerting rules",
+    "saved searches",
+    "Canvas workpads",
+    "Maps layers",
+    "Fleet and Elastic Agent",
+    "role-based access control"
+  ]
+}

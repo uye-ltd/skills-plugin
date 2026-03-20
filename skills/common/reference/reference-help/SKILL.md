@@ -63,6 +63,10 @@ Using the selected tool's `github.org` and `github.repo` fields:
 - Summarise the maintainer or community explanation
 - Include links to the relevant threads
 - Note any workarounds or recommended solutions
+- **Fix version:** If the issue is closed and the thread or its timeline references a release,
+  milestone, or PR merge, explicitly call out: "Fixed in v`<version>`" or "Included in release
+  `<tag>`". Fetch the linked release or PR if the version is not clearly stated in the issue body.
+  If the issue is open or no fix version is determinable, say "Not yet fixed (open as of fetch date)".
 
 ## User question
 

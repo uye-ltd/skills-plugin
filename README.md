@@ -205,10 +205,16 @@ Skills are invoked as `/uye:<skill-name>` or automatically by the pipeline agent
 | `reference` | `reference-docs` | standalone |
 | | `reference-help` | standalone |
 | | `reference-sourcecode` | standalone |
+| | `reference-api` | standalone |
+| | `reference-changelog` | standalone |
+| | `reference-config` | standalone |
+| | `reference-examples` | standalone |
+| | `reference-list` | standalone |
 
 > Reference skills are dormant until tool names are listed in `settings.json → tools`.
 > Tool configs in `config/tools/` are schema-validated by `validate.sh` (required fields, name matches filename).
-> The three reference skills share a common resolution preamble via `skills/templates/reference-base.md`.
+> All eight reference skills share a common tool-resolution preamble via `skills/templates/reference-base.md`.
+> See [`docs/tools-config.md`](docs/tools-config.md) for optional fields: `docs.api_url`, `config.paths`, `aliases`, `github.related_repos`.
 
 ### Python
 
@@ -257,7 +263,66 @@ Skills are invoked as `/uye:<skill-name>` or automatically by the pipeline agent
 | `pipeline.skipReview` | `false` | Skip Reviewer agent (prototyping only) |
 | `pipeline.skipPlanner` | `false` | Skip Planner for small tasks |
 | `pipeline.autoPerformance` | `false` | Run Performance agent automatically after every PASS |
-| `tools` | `[]` | Enable reference skills: `["filebrowser"]`, `["caddy", "fail2ban"]` — see [`docs/tools-config.md`](docs/tools-config.md) for all bundled tools |
+| `tools` | `[]` | Enable reference skills: `["postgres", "redis"]`. Supports version pinning: `[{"name": "redis", "version": "7.2"}]` — overrides `github.branch` for source and config lookups. See [`docs/tools-config.md`](docs/tools-config.md) for all bundled tools |
+
+---
+
+## Bundled tools
+
+Reference skills activate for tools listed in `settings.json → tools`. All definitions live in `config/tools/`.
+
+| Tool | Category | Description |
+|------|----------|-------------|
+| `filebrowser` | Storage | Web-based file manager for self-hosted environments |
+| `navidrome` | Media | Self-hosted music streaming server compatible with the Subsonic API |
+| `caddy` | Web server | Fast, extensible web server with automatic HTTPS |
+| `nginx` | Web server | High-performance HTTP server, reverse proxy, and load balancer |
+| `fail2ban` | Security | Daemon that blocks IPs conducting repeated failed login attempts |
+| `docker` | Containers | Docker Engine CLI, Dockerfile authoring, image building, and registry management |
+| `docker-compose` | Containers | Multi-container application definition and orchestration |
+| `docker-buildx` | Containers | Extended image building with BuildKit: multi-platform builds and cache backends |
+| `prometheus` | Observability | Metrics collection, PromQL querying, and alerting rules |
+| `grafana` | Observability | Dashboards, alerting, and data source integrations for metrics, logs, and traces |
+| `elasticsearch` | Search / analytics | Distributed full-text search, structured queries, aggregations, and vector search |
+| `kibana` | Search / analytics | Visualisation and exploration UI for Elasticsearch — dashboards, Discover, Lens, Maps |
+| `kafka` | Messaging | Distributed event streaming — topics, partitions, consumer groups, and Kafka Streams |
+| `rabbitmq` | Messaging | Message broker supporting AMQP, MQTT, and STOMP — exchanges, queues, and routing |
+| `redis` | Data store | In-memory caching, pub/sub, sorted sets, streams, and Redis Cluster |
+| `postgres` | Database | Relational database — SQL, JSONB, full-text search, partitioning, and replication |
+| `mongodb` | Database | Document-oriented NoSQL — aggregation pipelines, Atlas Search, and transactions |
+| `clickhouse` | Database | Column-oriented OLAP — MergeTree engines, materialized views, and distributed tables |
+| `kubernetes` | Orchestration | Workloads, services, ingress, RBAC, config maps, persistent volumes, and cluster management |
+| `helm` | Orchestration | Kubernetes package manager — chart authoring, values, templating, releases, and hooks |
+| `traefik` | Web server | Cloud-native reverse proxy — routers, middlewares, TLS, and Let's Encrypt auto-certs |
+| `github-actions` | CI/CD | Workflows, jobs, reusable actions, secrets, environments, and self-hosted runners |
+| `logstash` | Observability | Data processing pipeline — inputs, filters, outputs, codecs, and Elastic Stack ingest |
+| `opentelemetry` | Observability | Distributed tracing, metrics, and logs SDK, collector config, and instrumentation |
+| `sentry` | Observability | Error tracking and performance monitoring — SDK, issue grouping, traces, and alerts |
+| `terraform` | Infrastructure | Infrastructure as code — providers, resources, modules, state, and remote backends |
+| `ansible` | Infrastructure | Agentless automation — playbooks, roles, inventories, modules, and Vault secrets |
+| `vault` | Auth & secrets | Dynamic secrets, PKI, encryption as a service, auth methods, and audit logging |
+| `rustfs` | Storage | S3-compatible object storage in Rust — buckets, access policies, and high-throughput storage |
+| `minio` | Storage | High-performance S3-compatible storage — IAM policies, lifecycle rules, and replication |
+| `icecast` | Media | Streaming media server — mount points, relay, source clients, and listener auth |
+| `liquidsoap` | Media | Audio/video streaming scripting — sources, operators, scheduling, and live radio automation |
+| `plex` | Media | Media library organisation, streaming, transcoding, remote access, and client management |
+| `neo4j` | Database | Graph database — Cypher queries, graph data modeling, indexes, constraints, and graph algorithms |
+| `sqlite` | Database | Embedded relational database — SQL, FTS5 full-text search, WAL mode, and JSON functions |
+| `mysql` | Database | Relational database — SQL, stored procedures, replication, InnoDB engine, and partitioning |
+| `mailserver` | Mail | Full-featured mail server in Docker — SMTP, IMAP, DKIM, SPF, DMARC, and spam filtering |
+| `keycloak` | Auth | Identity and access management — SSO, OAuth2, OIDC, SAML, realms, clients, and user federation |
+| `celery` | Messaging | Distributed task queue — async tasks, periodic tasks, brokers, result backends, and routing |
+| `loki` | Observability | Log aggregation — LogQL queries, label-based indexing, log streams, and ruler alerting |
+| `tempo` | Observability | Distributed tracing — trace ingestion, TraceQL queries, search, and metrics generation |
+| `wireguard` | Networking | Modern VPN — tunnel configuration, peer setup, key management, and routing |
+| `tailscale` | Networking | Zero-config mesh VPN — ACL policies, subnet routing, exit nodes, and MagicDNS |
+| `pihole` | Networking | DNS ad blocker — blocklists, allowlists, DHCP server, query logging, and custom DNS records |
+| `adguard-home` | Networking | Network-wide DNS blocker — filtering rules, DHCP, encrypted DNS, and parental controls |
+| `portainer` | Infra | Container management UI — Docker and Kubernetes environments, stacks, and RBAC |
+| `crowdsec` | Security | Collaborative security engine — behavior detection, bouncers, scenarios, and CAPI sharing |
+| `trivy` | Security | Vulnerability scanner — containers, IaC, SBOMs, and secret detection |
+
+See [`docs/tools-config.md`](docs/tools-config.md) for the full schema and how to add new tools.
 
 ---
 
@@ -313,17 +378,22 @@ claude --plugin-dir /path/to/skills-plugin
   --docs-url "https://grafana.com/docs/grafana/latest/" \
   --github grafana/grafana \
   --branch main \
-  --examples "dashboard provisioning,alerting rules,data sources"
+  --examples "dashboard provisioning,alerting rules,data sources" \
+  --api-url "https://grafana.com/docs/grafana/latest/developers/http_api/" \
+  --aliases "grafana-oss" \
+  --config-paths "conf/defaults.ini" \
+  --related-repos "grafana/loki,grafana/tempo"
 # → creates config/tools/grafana.json
 
 # Enable in any project's settings.json:
 #   { "tools": ["grafana"] }
+#   { "tools": [{"name": "redis", "version": "7.2"}] }   ← version-pinned source lookups
 
 # Or copy config into a project that can't reference the plugin path:
 ./scripts/enable-tool.sh grafana /path/to/project
 ```
 
-See [`docs/tools-config.md`](docs/tools-config.md) for the full schema.
+All flags after `--branch` are optional. See [`docs/tools-config.md`](docs/tools-config.md) for the full schema.
 
 ### New skill
 
@@ -426,7 +496,9 @@ skills-plugin/
 │   │   ├── docs/                     # docs-write, docs-review, …
 │   │   ├── devops/                   # dockerfile, ci-pipeline, k8s, …
 │   │   ├── security/                 # infra/boundary-level: owasp-check, input-validation, …
-│   │   └── reference/               # reference-docs, reference-help, reference-sourcecode
+│   │   └── reference/               # reference-docs, reference-help, reference-sourcecode,
+│                                #   reference-api, reference-changelog, reference-config,
+│                                #   reference-examples, reference-list
 │   ├── python/
 │   │   ├── analysis/                 # py-code-review, py-check-bugs
 │   │   ├── generation/               # py-generate-func, py-generate-class, …

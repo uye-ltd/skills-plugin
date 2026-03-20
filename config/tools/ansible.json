@@ -1,0 +1,33 @@
+{
+  "name": "ansible",
+  "description": "Agentless IT automation \u2014 playbooks, roles, inventories, modules, handlers, Vault secrets, and collections",
+  "docs": {
+    "url": "https://docs.ansible.com/",
+    "sections": [
+      "playbook_guide",
+      "inventory_guide",
+      "collections_guide",
+      "vault_guide",
+      "installation_guide",
+      "reference_appendices",
+      "module_utils"
+    ]
+  },
+  "github": {
+    "org": "ansible",
+    "repo": "ansible",
+    "branch": "stable-2.18"
+  },
+  "examples": [
+    "playbook structure and tasks",
+    "inventory groups and host vars",
+    "roles and role dependencies",
+    "handlers and notify",
+    "Ansible Vault encrypted vars",
+    "loops and conditionals",
+    "templates with Jinja2",
+    "modules (copy/file/service/package)",
+    "tags and limits",
+    "dynamic inventory"
+  ]
+}

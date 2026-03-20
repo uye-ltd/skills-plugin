@@ -1,0 +1,21 @@
+{
+  "name": "sqlite",
+  "description": "Embedded relational database \u2014 SQL queries, schema design, FTS5 full-text search, WAL mode, and JSON functions",
+  "docs": {
+    "url": "https://www.sqlite.org/docs.html",
+    "sections": []
+  },
+  "github": {
+    "org": "sqlite",
+    "repo": "sqlite",
+    "branch": "master"
+  },
+  "examples": [
+    "SQL queries",
+    "schema design",
+    "FTS5 full-text search",
+    "WAL mode",
+    "JSON functions",
+    "pragmas"
+  ]
+}

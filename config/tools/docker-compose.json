@@ -1,0 +1,34 @@
+{
+  "name": "docker-compose",
+  "description": "Docker Compose — multi-container application definition and orchestration using compose.yaml",
+  "docs": {
+    "url": "https://docs.docker.com/",
+    "sections": [
+      "manuals/compose",
+      "manuals/compose/gettingstarted",
+      "manuals/compose/how-tos/networking",
+      "manuals/compose/how-tos/volumes",
+      "manuals/compose/how-tos/environment-variables",
+      "manuals/compose/how-tos/profiles",
+      "reference/compose-file"
+    ]
+  },
+  "github": {
+    "org": "docker",
+    "repo": "compose",
+    "branch": "main"
+  },
+  "aliases": ["compose"],
+  "examples": [
+    "compose.yaml structure",
+    "service dependencies",
+    "named volumes",
+    "environment variables",
+    "network aliases",
+    "health checks",
+    "profiles",
+    "override files",
+    "secrets",
+    "deploy replicas"
+  ]
+}

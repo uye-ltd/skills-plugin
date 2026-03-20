@@ -1,0 +1,31 @@
+{
+  "name": "docker-buildx",
+  "description": "Docker Buildx — extended image building with BuildKit: multi-platform builds, cache backends, and build secrets",
+  "docs": {
+    "url": "https://docs.docker.com/",
+    "sections": [
+      "manuals/build",
+      "manuals/build/building/multi-platform",
+      "manuals/build/cache",
+      "manuals/build/secrets",
+      "manuals/build/bake",
+      "reference/cli/docker/buildx"
+    ]
+  },
+  "github": {
+    "org": "docker",
+    "repo": "buildx",
+    "branch": "master"
+  },
+  "examples": [
+    "multi-platform builds",
+    "BuildKit cache mounts",
+    "build secrets",
+    "remote cache backends",
+    "bake files",
+    "cross-compilation",
+    "QEMU emulation",
+    "build attestations",
+    "provenance and SBOM"
+  ]
+}

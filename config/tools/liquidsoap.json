@@ -1,0 +1,31 @@
+{
+  "name": "liquidsoap",
+  "description": "Scripting language and toolset for audio and video streaming \u2014 sources, operators, outputs, scheduling, and live radio automation",
+  "docs": {
+    "url": "https://www.liquidsoap.info/",
+    "sections": [
+      "language",
+      "reference",
+      "cookbook",
+      "protocols",
+      "encoding-formats"
+    ]
+  },
+  "github": {
+    "org": "savonet",
+    "repo": "liquidsoap",
+    "branch": "main"
+  },
+  "examples": [
+    "playlist and request queues",
+    "crossfade and transitions",
+    "fallback sources",
+    "Icecast and Shoutcast output",
+    "live input and harbour",
+    "metadata rewriting",
+    "clock and buffer management",
+    "HTTPS streaming",
+    "scheduler and time predicates",
+    "custom operators and scripts"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "wireguard",
+  "description": "Modern VPN protocol \u2014 tunnel configuration, peer setup, key management, routing, and kernel integration",
+  "docs": {
+    "url": "https://www.wireguard.com/",
+    "sections": []
+  },
+  "github": {
+    "org": "WireGuard",
+    "repo": "wireguard-linux-compat",
+    "branch": "master"
+  },
+  "examples": [
+    "tunnel configuration",
+    "peer setup",
+    "key management",
+    "routing rules",
+    "NAT traversal",
+    "wg-quick",
+    "multi-peer setup"
+  ]
+}

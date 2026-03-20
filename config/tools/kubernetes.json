@@ -1,0 +1,35 @@
+{
+  "name": "kubernetes",
+  "description": "Container orchestration platform — workloads, services, ingress, RBAC, config maps, persistent volumes, and cluster management",
+  "docs": {
+    "url": "https://kubernetes.io/docs/",
+    "api_url": "https://kubernetes.io/docs/reference/kubernetes-api/",
+    "sections": [
+      "concepts",
+      "tasks",
+      "reference",
+      "reference/kubectl",
+      "reference/kubernetes-api",
+      "setup",
+      "tutorials"
+    ]
+  },
+  "github": {
+    "org": "kubernetes",
+    "repo": "kubernetes",
+    "branch": "master"
+  },
+  "aliases": ["k8s"],
+  "examples": [
+    "Deployments and ReplicaSets",
+    "Services and Ingress",
+    "ConfigMaps and Secrets",
+    "PersistentVolumes",
+    "RBAC and ServiceAccounts",
+    "HorizontalPodAutoscaler",
+    "namespaces",
+    "DaemonSets",
+    "StatefulSets",
+    "network policies"
+  ]
+}

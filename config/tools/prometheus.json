@@ -1,0 +1,46 @@
+{
+  "name": "prometheus",
+  "description": "Open-source monitoring and alerting toolkit — metrics collection, PromQL querying, and alerting rules",
+  "docs": {
+    "url": "https://prometheus.io/docs/",
+    "api_url": "https://prometheus.io/docs/prometheus/latest/querying/api/",
+    "sections": [
+      "introduction/overview",
+      "concepts/data_model",
+      "concepts/metric_types",
+      "prometheus/getting_started",
+      "prometheus/configuration",
+      "prometheus/storage",
+      "prometheus/federation",
+      "querying/basics",
+      "querying/functions",
+      "querying/examples",
+      "alerting/overview",
+      "alerting/alertmanager",
+      "alerting/rules",
+      "practices/naming",
+      "practices/instrumentation",
+      "practices/histograms"
+    ]
+  },
+  "github": {
+    "org": "prometheus",
+    "repo": "prometheus",
+    "branch": "main"
+  },
+  "config": {
+    "paths": ["documentation/examples/prometheus.yml"]
+  },
+  "examples": [
+    "PromQL queries",
+    "scrape configuration",
+    "relabeling rules",
+    "alerting rules",
+    "recording rules",
+    "histogram and summary metrics",
+    "federation",
+    "remote write and read",
+    "service discovery",
+    "metric naming conventions"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "name": "terraform",
+  "description": "Infrastructure as code tool \u2014 providers, resources, modules, state management, workspaces, and remote backends",
+  "docs": {
+    "url": "https://developer.hashicorp.com/terraform/docs",
+    "sections": [
+      "language",
+      "cli",
+      "internals",
+      "plugin",
+      "registry"
+    ]
+  },
+  "github": {
+    "org": "hashicorp",
+    "repo": "terraform",
+    "branch": "main"
+  },
+  "examples": [
+    "resource and data blocks",
+    "variables and outputs",
+    "locals and expressions",
+    "modules and module registry",
+    "state backends and remote state",
+    "workspaces",
+    "provider configuration",
+    "count and for_each",
+    "lifecycle meta-arguments",
+    "import existing infrastructure"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "name": "github-actions",
+  "description": "CI/CD automation platform \u2014 workflows, jobs, steps, reusable actions, secrets, environments, and self-hosted runners",
+  "docs": {
+    "url": "https://docs.github.com/en/actions",
+    "sections": [
+      "learn-github-actions",
+      "using-workflows",
+      "using-jobs",
+      "writing-workflows",
+      "security-guides",
+      "hosting-your-own-runners",
+      "deployment",
+      "managing-workflow-runs-and-deployments"
+    ]
+  },
+  "github": {
+    "org": "actions",
+    "repo": "runner",
+    "branch": "main"
+  },
+  "examples": [
+    "workflow triggers and events",
+    "matrix builds",
+    "reusable workflows",
+    "composite actions",
+    "secrets and variables",
+    "environment protection rules",
+    "artifact upload and download",
+    "caching dependencies",
+    "OIDC and cloud auth",
+    "self-hosted runners"
+  ]
+}

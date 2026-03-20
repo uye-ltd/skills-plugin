@@ -1,0 +1,33 @@
+{
+  "name": "clickhouse",
+  "description": "Column-oriented OLAP database \u2014 high-performance analytical queries, MergeTree engines, materialized views, and distributed tables",
+  "docs": {
+    "url": "https://clickhouse.com/docs",
+    "sections": [
+      "sql-reference",
+      "engines/table-engines",
+      "engines/table-engines/mergetree-family",
+      "operations",
+      "integrations",
+      "guides",
+      "materialized-view"
+    ]
+  },
+  "github": {
+    "org": "ClickHouse",
+    "repo": "ClickHouse",
+    "branch": "master"
+  },
+  "examples": [
+    "MergeTree and ReplacingMergeTree",
+    "materialized views",
+    "aggregating merge tree",
+    "distributed tables",
+    "data skipping indexes",
+    "TTL and data lifecycle",
+    "query profiling",
+    "external dictionaries",
+    "Kafka and S3 integrations",
+    "sharding and replication"
+  ]
+}

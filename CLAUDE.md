@@ -39,7 +39,7 @@ skill set for Executor and Reviewer. All other agents use common skills only.
 | `pipeline.skipReview` | `false` | Skip Reviewer agent (prototyping only) |
 | `pipeline.skipPlanner` | `false` | Skip Planner for small tasks |
 | `pipeline.autoPerformance` | `false` | Run Performance agent automatically after every PASS |
-| `tools` | `[]` | List of tool names to enable reference skills: `["filebrowser"]` |
+| `tools` | `[]` | Enable reference skills: `["postgres", "redis"]`. Supports version pinning: `[{"name": "redis", "version": "7.2"}]` — overrides `github.branch` for source lookups |
 
 ## Repository layout
 
@@ -54,7 +54,9 @@ skills/
     security/                — infra/boundary-level: owasp-check, input-validation, …
     docs/                    — docs-write, docs-review, …
     devops/                  — dockerfile, ci-pipeline, k8s, …
-    reference/               — reference-docs, reference-help, reference-sourcecode
+    reference/               — reference-docs, reference-help, reference-sourcecode,
+                               reference-api, reference-changelog, reference-config,
+                               reference-examples, reference-list
   python/ javascript/ go/    — language-specific skills
     analysis/                — code-review, check-bugs  (used by Reviewer)
     generation/              — generate-func, …         (used by Executor)
@@ -112,7 +114,7 @@ Rules:
 - `$ARGUMENTS` captures user-provided input; wrap it in a `## User question` section and add a fallback ("If no question is provided, ask the user…") so Claude handles empty invocations gracefully
 - Keep prompts actionable: tell Claude what to do, what to output, what format to use
 - If a skill is part of a parallel family (e.g. `analyze-trace` exists in py/js/go), set `template:` to the shared base in `skills/templates/` and keep only language-specific details in the skill body. `validate.sh` checks that the referenced template exists.
-- The three reference skills (`reference-docs`, `reference-help`, `reference-sourcecode`) share a common preamble via `template: reference-base`. Do not duplicate Steps 1–3 in reference skill bodies — edit `skills/templates/reference-base.md` instead.
+- All eight reference skills share a common tool-resolution preamble via `template: reference-base`. Do not duplicate Steps 1–3 in reference skill bodies — edit `skills/templates/reference-base.md` instead. The template also handles version pinning (`{"name": "redis", "version": "7.2"}`) and alias matching.
 
 Scaffold: `./scripts/new-skill.sh <language|common> <subcategory> <skill-name>`
 
@@ -149,8 +151,9 @@ Then fill in the generated placeholder SKILL.md files.
 
 ## Adding a new tool (reference skill family)
 
-Tool definitions live in `config/tools/<name>.json`. The three reference skills
-(`reference-docs`, `reference-help`, `reference-sourcecode`) load these at runtime.
+Tool definitions live in `config/tools/<name>.json`. All eight reference skills load these at
+runtime — `reference-docs`, `reference-help`, `reference-sourcecode`, `reference-api`,
+`reference-changelog`, `reference-config`, `reference-examples`, and `reference-list`.
 
 ```bash
 # Add a new tool definition to the plugin
@@ -160,15 +163,29 @@ Tool definitions live in `config/tools/<name>.json`. The three reference skills
   --docs-url "https://grafana.com/docs/grafana/latest/" \
   --github grafana/grafana \
   --branch main \
-  --examples "dashboard provisioning,alerting rules,data sources"
+  --examples "dashboard provisioning,alerting rules,data sources" \
+  --api-url "https://grafana.com/docs/grafana/latest/developers/http_api/" \
+  --aliases "grafana-oss" \
+  --config-paths "conf/defaults.ini" \
+  --related-repos "grafana/loki,grafana/tempo"
 # → creates config/tools/grafana.json
 
 # Enable tools in a project by adding to settings.json:
 #   { "tools": ["grafana"] }
+#   { "tools": [{"name": "redis", "version": "7.2"}] }   ← version-pinned source lookups
 
 # Alternatively, copy the config into the project directory:
 ./scripts/enable-tool.sh grafana /path/to/project
 ```
+
+Optional tool config fields:
+
+| Field | Description |
+|-------|-------------|
+| `docs.api_url` | Dedicated API reference URL — used by `reference-api` |
+| `config.paths` | Paths to default config files in the repo — used by `reference-config` |
+| `aliases` | Short names users may use (e.g. `k8s`, `pg`) for tool selection |
+| `github.related_repos` | Fallback repos for `reference-sourcecode` when primary yields nothing |
 
 See `docs/tools-config.md` for the full schema and all bundled tool definitions.
 

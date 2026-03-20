@@ -48,6 +48,27 @@ Always include `?ref=<branch>` on contents API calls to ensure the correct branc
 2. Fetch the file(s) containing the implementation
 3. Trace logic across layers: handlers → services → models → persistence
 4. Explain how the implementation works
+5. If the primary repository yields no relevant results, check `github.related_repos` (see below)
+
+## Multi-repo fallback
+
+If the tool config contains a `github.related_repos` array, and the primary repository search
+returns no relevant results, repeat Steps 4.1–4.3 for each related repo in order:
+
+```json
+"github": {
+  "org": "grafana",
+  "repo": "grafana",
+  "branch": "main",
+  "related_repos": [
+    {"org": "grafana", "repo": "loki"},
+    {"org": "grafana", "repo": "tempo"}
+  ]
+}
+```
+
+Use the same branch as the primary repo for related repos unless the related repo entry
+specifies its own `branch`. Stop searching once relevant code is found.
 
 ## Expected output
 
@@ -55,6 +76,7 @@ Always include `?ref=<branch>` on contents API calls to ensure the correct branc
 - Explain how the code works
 - Include function/method names and key logic
 - Provide links to the source files on GitHub
+- If results came from a related repo, note which repo they came from
 
 ## User question
 

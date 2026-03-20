@@ -1,0 +1,33 @@
+{
+  "name": "icecast",
+  "description": "Open-source streaming media server \u2014 mount points, relay, source clients, listener authentication, and live audio/video broadcasting",
+  "docs": {
+    "url": "https://icecast.org/docs/",
+    "sections": [
+      "basicsetup",
+      "config",
+      "icecast2_config",
+      "listenerauth",
+      "relaying",
+      "stats",
+      "win32"
+    ]
+  },
+  "github": {
+    "org": "xiph",
+    "repo": "Icecast-Server",
+    "branch": "master"
+  },
+  "examples": [
+    "icecast.xml configuration",
+    "mount point setup",
+    "source password and clients",
+    "relay from upstream server",
+    "listener authentication",
+    "stream metadata",
+    "fallback mounts",
+    "HLS streaming",
+    "logging and access control",
+    "SSL/TLS setup"
+  ]
+}

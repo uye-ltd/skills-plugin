@@ -1,0 +1,21 @@
+{
+  "name": "mysql",
+  "description": "Open-source relational database \u2014 SQL, stored procedures, replication, InnoDB engine, partitioning, and performance schema",
+  "docs": {
+    "url": "https://dev.mysql.com/doc/",
+    "sections": []
+  },
+  "github": {
+    "org": "mysql",
+    "repo": "mysql-server",
+    "branch": "8.4"
+  },
+  "examples": [
+    "SQL queries",
+    "stored procedures",
+    "replication setup",
+    "InnoDB tuning",
+    "partitioning",
+    "performance schema"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "name": "docker",
+  "description": "Container platform — Docker Engine CLI, Dockerfile authoring, image building, and registry management",
+  "docs": {
+    "url": "https://docs.docker.com/",
+    "sections": [
+      "get-started",
+      "manuals/engine",
+      "manuals/engine/install",
+      "manuals/engine/storage",
+      "manuals/engine/network",
+      "manuals/build",
+      "reference/cli/docker",
+      "reference/dockerfile"
+    ]
+  },
+  "github": {
+    "org": "docker",
+    "repo": "cli",
+    "branch": "master"
+  },
+  "examples": [
+    "Dockerfile best practices",
+    "multi-stage builds",
+    "image layering",
+    "volume mounts",
+    "bind mounts",
+    "container networking",
+    "docker run flags",
+    "docker build arguments",
+    "pushing and pulling images",
+    "registry authentication"
+  ]
+}

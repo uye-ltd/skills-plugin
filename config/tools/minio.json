@@ -1,0 +1,25 @@
+{
+  "name": "minio",
+  "description": "High-performance S3-compatible object storage \u2014 buckets, IAM policies, lifecycle rules, replication, and Kubernetes operator",
+  "docs": {
+    "url": "https://min.io/docs/minio/linux/index.html",
+    "sections": []
+  },
+  "github": {
+    "org": "minio",
+    "repo": "minio",
+    "branch": "master"
+  },
+  "examples": [
+    "bucket creation and versioning",
+    "IAM users and service accounts",
+    "bucket policies and ACLs",
+    "server-side encryption",
+    "lifecycle management and tiering",
+    "site replication",
+    "Kubernetes operator",
+    "mc CLI",
+    "S3 SDK compatibility",
+    "MinIO Console"
+  ]
+}

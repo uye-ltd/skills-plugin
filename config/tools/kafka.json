@@ -1,0 +1,37 @@
+{
+  "name": "kafka",
+  "description": "Distributed event streaming platform \u2014 high-throughput message queues, topics, partitions, consumer groups, and Kafka Streams",
+  "docs": {
+    "url": "https://kafka.apache.org/documentation/",
+    "sections": [
+      "gettingStarted",
+      "design",
+      "implementation",
+      "operations",
+      "security",
+      "connect",
+      "streams",
+      "streams/developer-guide"
+    ]
+  },
+  "github": {
+    "org": "apache",
+    "repo": "kafka",
+    "branch": "3.9"
+  },
+  "config": {
+    "paths": ["config/server.properties", "config/producer.properties", "config/consumer.properties"]
+  },
+  "examples": [
+    "topic configuration",
+    "producer and consumer APIs",
+    "consumer groups",
+    "Kafka Connect",
+    "Kafka Streams",
+    "exactly-once semantics",
+    "partition rebalancing",
+    "retention policies",
+    "schema registry",
+    "monitoring"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "name": "logstash",
+  "description": "Server-side data processing pipeline \u2014 inputs, filters, outputs, codecs, and Elastic Stack ingest",
+  "docs": {
+    "url": "https://www.elastic.co/docs/reference/logstash",
+    "sections": [
+      "input-plugins",
+      "output-plugins",
+      "filter-plugins",
+      "codec-plugins",
+      "configuration",
+      "pipeline-to-pipeline",
+      "working-with-plugins",
+      "ls-ls"
+    ]
+  },
+  "github": {
+    "org": "elastic",
+    "repo": "logstash",
+    "branch": "main"
+  },
+  "examples": [
+    "grok filter patterns",
+    "mutate and date filters",
+    "Elasticsearch output",
+    "Kafka input and output",
+    "pipeline-to-pipeline routing",
+    "dead letter queues",
+    "multiple pipelines",
+    "codec JSON and multiline",
+    "conditional logic",
+    "persistent queues"
+  ]
+}

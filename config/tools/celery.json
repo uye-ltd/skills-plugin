@@ -1,0 +1,22 @@
+{
+  "name": "celery",
+  "description": "Distributed task queue \u2014 async tasks, periodic tasks, brokers, result backends, routing, and worker scaling",
+  "docs": {
+    "url": "https://docs.celeryq.dev/en/stable/",
+    "sections": []
+  },
+  "github": {
+    "org": "celery",
+    "repo": "celery",
+    "branch": "main"
+  },
+  "examples": [
+    "task definition",
+    "periodic tasks",
+    "broker configuration",
+    "result backends",
+    "task routing",
+    "worker scaling",
+    "retries"
+  ]
+}

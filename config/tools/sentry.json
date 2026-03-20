@@ -1,0 +1,34 @@
+{
+  "name": "sentry",
+  "description": "Error tracking and performance monitoring platform \u2014 SDK integration, issue grouping, traces, alerts, and source maps",
+  "docs": {
+    "url": "https://docs.sentry.io/",
+    "sections": [
+      "platforms",
+      "product",
+      "product/issues",
+      "product/performance",
+      "product/alerts",
+      "product/releases",
+      "concepts",
+      "cli"
+    ]
+  },
+  "github": {
+    "org": "getsentry",
+    "repo": "sentry",
+    "branch": "master"
+  },
+  "examples": [
+    "SDK initialisation and DSN",
+    "capturing exceptions and messages",
+    "breadcrumbs",
+    "performance transactions and spans",
+    "release tracking and commits",
+    "source maps",
+    "alert rules and notifications",
+    "issue grouping and fingerprinting",
+    "environment configuration",
+    "Sentry CLI"
+  ]
+}

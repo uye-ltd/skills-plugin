@@ -1,0 +1,41 @@
+{
+  "name": "elasticsearch",
+  "description": "Distributed search and analytics engine — full-text search, structured queries, aggregations, and vector search",
+  "docs": {
+    "url": "https://www.elastic.co/docs",
+    "api_url": "https://www.elastic.co/docs/api/doc/elasticsearch/",
+    "sections": [
+      "reference",
+      "reference/query-dsl",
+      "reference/mapping",
+      "reference/aggregations",
+      "reference/indices",
+      "reference/docs",
+      "reference/search",
+      "setup",
+      "upgrade",
+      "how-to"
+    ]
+  },
+  "github": {
+    "org": "elastic",
+    "repo": "elasticsearch",
+    "branch": "main",
+    "related_repos": [
+      {"org": "elastic", "repo": "kibana"}
+    ]
+  },
+  "aliases": ["es"],
+  "examples": [
+    "index mappings",
+    "query DSL",
+    "aggregations",
+    "full-text search",
+    "vector/kNN search",
+    "index lifecycle management",
+    "cluster settings",
+    "ingest pipelines",
+    "aliases",
+    "snapshot and restore"
+  ]
+}

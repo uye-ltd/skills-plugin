@@ -1,0 +1,22 @@
+{
+  "name": "portainer",
+  "description": "Container management UI \u2014 Docker and Kubernetes environments, stacks, registries, users, and RBAC",
+  "docs": {
+    "url": "https://docs.portainer.io/",
+    "sections": []
+  },
+  "github": {
+    "org": "portainer",
+    "repo": "portainer",
+    "branch": "master"
+  },
+  "examples": [
+    "stack deployment",
+    "environment management",
+    "registry configuration",
+    "user management",
+    "RBAC",
+    "edge agents",
+    "templates"
+  ]
+}

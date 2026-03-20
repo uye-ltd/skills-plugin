@@ -1,0 +1,31 @@
+{
+  "name": "helm",
+  "description": "Kubernetes package manager \u2014 chart authoring, values, templating, releases, hooks, and repository management",
+  "docs": {
+    "url": "https://helm.sh/docs/",
+    "sections": [
+      "intro",
+      "chart_template_guide",
+      "chart_best_practices",
+      "topics",
+      "helm"
+    ]
+  },
+  "github": {
+    "org": "helm",
+    "repo": "helm",
+    "branch": "main"
+  },
+  "examples": [
+    "chart structure and Chart.yaml",
+    "values.yaml overrides",
+    "template functions and pipelines",
+    "named templates",
+    "hooks",
+    "chart dependencies",
+    "OCI registries",
+    "release lifecycle",
+    "Helmfile",
+    "migrating from v2 to v3"
+  ]
+}

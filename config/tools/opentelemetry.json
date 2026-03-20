@@ -1,0 +1,38 @@
+{
+  "name": "opentelemetry",
+  "description": "Observability framework — distributed tracing, metrics, and logs SDK, collector config, and instrumentation across languages",
+  "docs": {
+    "url": "https://opentelemetry.io/docs/",
+    "sections": [
+      "concepts",
+      "collector",
+      "instrumentation",
+      "languages",
+      "languages/python",
+      "languages/js",
+      "languages/go"
+    ]
+  },
+  "github": {
+    "org": "open-telemetry",
+    "repo": "opentelemetry-specification",
+    "branch": "main",
+    "related_repos": [
+      {"org": "open-telemetry", "repo": "opentelemetry-collector"},
+      {"org": "open-telemetry", "repo": "opentelemetry-collector-contrib"}
+    ]
+  },
+  "aliases": ["otel"],
+  "examples": [
+    "SDK initialisation and resource",
+    "trace context propagation",
+    "span attributes and events",
+    "metric instruments (counter/histogram)",
+    "collector pipelines and exporters",
+    "OTLP over gRPC and HTTP",
+    "auto-instrumentation",
+    "baggage",
+    "sampling strategies",
+    "Jaeger and Prometheus exporters"
+  ]
+}

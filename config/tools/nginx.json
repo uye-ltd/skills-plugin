@@ -1,0 +1,39 @@
+{
+  "name": "nginx",
+  "description": "High-performance HTTP server, reverse proxy, and load balancer",
+  "docs": {
+    "url": "https://nginx.org/en/docs/",
+    "sections": [
+      "beginners_guide",
+      "directives",
+      "http/ngx_http_core_module",
+      "http/ngx_http_proxy_module",
+      "http/ngx_http_upstream_module",
+      "http/ngx_http_ssl_module",
+      "http/ngx_http_rewrite_module",
+      "http/ngx_http_headers_module",
+      "stream/ngx_stream_core_module",
+      "control"
+    ]
+  },
+  "github": {
+    "org": "nginx",
+    "repo": "nginx",
+    "branch": "master"
+  },
+  "config": {
+    "paths": ["conf/nginx.conf"]
+  },
+  "examples": [
+    "reverse proxy configuration",
+    "load balancing",
+    "SSL/TLS termination",
+    "static file serving",
+    "virtual hosts",
+    "URL rewriting",
+    "rate limiting",
+    "gzip compression",
+    "upstream keepalive",
+    "location blocks"
+  ]
+}

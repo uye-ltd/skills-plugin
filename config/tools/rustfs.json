@@ -1,0 +1,31 @@
+{
+  "name": "rustfs",
+  "description": "S3-compatible object storage written in Rust \u2014 buckets, objects, multipart uploads, access policies, and high-throughput data storage",
+  "docs": {
+    "url": "https://docs.rustfs.com/installation/",
+    "sections": [
+      "quickstart",
+      "configuration",
+      "administration",
+      "s3-compatibility",
+      "security"
+    ]
+  },
+  "github": {
+    "org": "rustfs",
+    "repo": "rustfs",
+    "branch": "main"
+  },
+  "examples": [
+    "bucket creation and policies",
+    "S3-compatible API usage",
+    "multipart uploads",
+    "access key management",
+    "TLS configuration",
+    "erasure coding",
+    "distributed deployment",
+    "storage classes",
+    "lifecycle policies",
+    "CLI usage"
+  ]
+}

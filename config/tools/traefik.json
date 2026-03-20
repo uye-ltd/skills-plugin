@@ -1,0 +1,33 @@
+{
+  "name": "traefik",
+  "description": "Cloud-native reverse proxy and load balancer \u2014 routers, middlewares, services, TLS, and Let's Encrypt auto-certs",
+  "docs": {
+    "url": "https://doc.traefik.io/traefik/",
+    "sections": [
+      "getting-started",
+      "routing",
+      "middlewares",
+      "https",
+      "providers",
+      "observability",
+      "operations"
+    ]
+  },
+  "github": {
+    "org": "traefik",
+    "repo": "traefik",
+    "branch": "master"
+  },
+  "examples": [
+    "routers and rules",
+    "middlewares chain",
+    "Let's Encrypt TLS",
+    "Docker and Kubernetes providers",
+    "TCP and UDP routing",
+    "rate limiting",
+    "basic auth",
+    "redirect and rewrite",
+    "access logs",
+    "dashboard"
+  ]
+}

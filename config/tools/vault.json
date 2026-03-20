@@ -1,0 +1,35 @@
+{
+  "name": "vault",
+  "description": "Secrets management platform — dynamic secrets, PKI, encryption as a service, auth methods, policies, and audit logging",
+  "docs": {
+    "url": "https://developer.hashicorp.com/vault/docs",
+    "api_url": "https://developer.hashicorp.com/vault/api-docs",
+    "sections": [
+      "concepts",
+      "commands",
+      "auth",
+      "secrets",
+      "configuration",
+      "api-docs",
+      "plugins",
+      "enterprise"
+    ]
+  },
+  "github": {
+    "org": "hashicorp",
+    "repo": "vault",
+    "branch": "main"
+  },
+  "examples": [
+    "KV secrets engine v1 and v2",
+    "dynamic database credentials",
+    "PKI certificate authority",
+    "AWS and GCP dynamic secrets",
+    "token and AppRole auth",
+    "policies and capabilities",
+    "transit encryption",
+    "agent auto-unseal",
+    "audit devices",
+    "Vault namespaces"
+  ]
+}

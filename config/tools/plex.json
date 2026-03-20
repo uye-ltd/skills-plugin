@@ -1,0 +1,32 @@
+{
+  "name": "plex",
+  "description": "Plex Media Server \u2014 media library organisation, streaming, transcoding, remote access, and client management",
+  "docs": {
+    "url": "https://support.plex.tv/",
+    "sections": [
+      "articles/200288566",
+      "articles/200264746",
+      "articles/201105343",
+      "articles/200430283",
+      "articles/201638786",
+      "articles/200931138"
+    ]
+  },
+  "github": {
+    "org": "plexinc",
+    "repo": "pms-docker",
+    "branch": "master"
+  },
+  "examples": [
+    "library setup and scanning",
+    "metadata agents",
+    "transcoding settings",
+    "remote access and relay",
+    "Plex Pass features",
+    "server sharing and managed users",
+    "network and bandwidth settings",
+    "Docker deployment",
+    "scheduled tasks",
+    "hardware-accelerated transcoding"
+  ]
+}

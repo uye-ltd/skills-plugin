@@ -1,0 +1,45 @@
+{
+  "name": "postgres",
+  "description": "Advanced open-source relational database — SQL, JSONB, full-text search, partitioning, extensions, and replication",
+  "docs": {
+    "url": "https://www.postgresql.org/docs/current/",
+    "sections": [
+      "sql",
+      "datatype",
+      "functions",
+      "indexes",
+      "mvcc",
+      "parallel-query",
+      "ddl",
+      "dml",
+      "queries",
+      "performance-tips",
+      "high-availability",
+      "logical-replication",
+      "backup-restore",
+      "monitoring",
+      "extend"
+    ]
+  },
+  "github": {
+    "org": "postgres",
+    "repo": "postgres",
+    "branch": "master"
+  },
+  "config": {
+    "paths": ["src/backend/utils/misc/postgresql.conf.sample"]
+  },
+  "aliases": ["pg", "psql", "postgresql"],
+  "examples": [
+    "window functions",
+    "CTEs and recursive queries",
+    "JSONB operators",
+    "full-text search",
+    "table partitioning",
+    "logical replication",
+    "pg_stat views",
+    "EXPLAIN ANALYZE",
+    "row-level security",
+    "extensions like pg_trgm and uuid-ossp"
+  ]
+}

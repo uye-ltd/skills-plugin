@@ -1,0 +1,22 @@
+{
+  "name": "tempo",
+  "description": "Distributed tracing backend by Grafana \u2014 trace ingestion, TraceQL queries, search, and metrics generation",
+  "docs": {
+    "url": "https://grafana.com/docs/tempo/latest/",
+    "sections": []
+  },
+  "github": {
+    "org": "grafana",
+    "repo": "tempo",
+    "branch": "main"
+  },
+  "examples": [
+    "TraceQL queries",
+    "trace ingestion",
+    "Tempo configuration",
+    "metrics from spans",
+    "search",
+    "multi-tenancy",
+    "storage backends"
+  ]
+}

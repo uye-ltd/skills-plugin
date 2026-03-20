@@ -1,0 +1,21 @@
+{
+  "name": "mailserver",
+  "description": "Full-featured mail server in Docker \u2014 SMTP, IMAP, DKIM, SPF, DMARC, spam filtering, and TLS configuration",
+  "docs": {
+    "url": "https://docker-mailserver.github.io/docker-mailserver/latest/",
+    "sections": []
+  },
+  "github": {
+    "org": "docker-mailserver",
+    "repo": "docker-mailserver",
+    "branch": "master"
+  },
+  "examples": [
+    "DKIM setup",
+    "DMARC policy",
+    "spam filtering",
+    "TLS configuration",
+    "user management",
+    "relay hosts"
+  ]
+}

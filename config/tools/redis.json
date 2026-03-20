@@ -1,0 +1,39 @@
+{
+  "name": "redis",
+  "description": "In-memory data structure store \u2014 caching, pub/sub, sorted sets, streams, Lua scripting, and Redis Cluster",
+  "docs": {
+    "url": "https://redis.io/docs",
+    "sections": [
+      "data-types",
+      "commands",
+      "management",
+      "scaling",
+      "security",
+      "clients",
+      "manual",
+      "manual/keyspace-notifications",
+      "manual/transactions",
+      "manual/pubsub"
+    ]
+  },
+  "github": {
+    "org": "redis",
+    "repo": "redis",
+    "branch": "7.4"
+  },
+  "config": {
+    "paths": ["redis.conf"]
+  },
+  "examples": [
+    "string and hash commands",
+    "sorted sets and leaderboards",
+    "pub/sub messaging",
+    "Redis Streams",
+    "Lua scripting",
+    "transactions with MULTI/EXEC",
+    "keyspace notifications",
+    "Redis Cluster",
+    "Sentinel",
+    "persistence RDB and AOF"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "name": "mongodb",
+  "description": "Document-oriented NoSQL database \u2014 flexible schemas, aggregation pipelines, Atlas Search, transactions, and sharding",
+  "docs": {
+    "url": "https://www.mongodb.com/docs/manual/",
+    "sections": [
+      "crud",
+      "aggregation",
+      "indexes",
+      "data-modeling",
+      "transactions",
+      "replication",
+      "sharding",
+      "security",
+      "changeStreams",
+      "atlas-search",
+      "text-search",
+      "geospatial-queries"
+    ]
+  },
+  "github": {
+    "org": "mongodb",
+    "repo": "mongo",
+    "branch": "master"
+  },
+  "examples": [
+    "aggregation pipelines",
+    "index strategies",
+    "change streams",
+    "transactions",
+    "schema validation",
+    "Atlas Search",
+    "geospatial queries",
+    "time series collections",
+    "realm sync",
+    "RBAC and field-level encryption"
+  ]
+}

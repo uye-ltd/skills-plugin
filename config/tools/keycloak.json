@@ -1,0 +1,22 @@
+{
+  "name": "keycloak",
+  "description": "Open-source identity and access management \u2014 SSO, OAuth2, OIDC, SAML, realms, clients, and user federation",
+  "docs": {
+    "url": "https://www.keycloak.org/documentation",
+    "sections": []
+  },
+  "github": {
+    "org": "keycloak",
+    "repo": "keycloak",
+    "branch": "main"
+  },
+  "examples": [
+    "realm configuration",
+    "client setup",
+    "OAuth2 flows",
+    "SAML federation",
+    "user federation",
+    "themes",
+    "role mapping"
+  ]
+}

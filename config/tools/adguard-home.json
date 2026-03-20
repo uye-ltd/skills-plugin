@@ -1,0 +1,22 @@
+{
+  "name": "adguard-home",
+  "description": "Network-wide DNS ad blocker and privacy guard \u2014 filtering rules, DHCP, encrypted DNS, and parental controls",
+  "docs": {
+    "url": "https://adguard-dns.io/kb/adguard-home/",
+    "sections": []
+  },
+  "github": {
+    "org": "AdguardTeam",
+    "repo": "AdGuardHome",
+    "branch": "master"
+  },
+  "examples": [
+    "filtering rules",
+    "DNS-over-HTTPS",
+    "DHCP server",
+    "parental controls",
+    "client settings",
+    "blocklists",
+    "rewrites"
+  ]
+}

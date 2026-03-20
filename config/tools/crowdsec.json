@@ -1,0 +1,22 @@
+{
+  "name": "crowdsec",
+  "description": "Collaborative security engine \u2014 behavior detection, bouncers, scenarios, hub collections, and CAPI sharing",
+  "docs": {
+    "url": "https://docs.crowdsec.net/",
+    "sections": []
+  },
+  "github": {
+    "org": "crowdsecurity",
+    "repo": "crowdsec",
+    "branch": "master"
+  },
+  "examples": [
+    "scenario configuration",
+    "bouncer setup",
+    "hub collections",
+    "CAPI enrollment",
+    "whitelist management",
+    "alert triage",
+    "Traefik integration"
+  ]
+}

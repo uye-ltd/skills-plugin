@@ -1,0 +1,35 @@
+{
+  "name": "ffmpeg",
+  "description": "Multimedia framework for decoding, encoding, transcoding, muxing, demuxing, streaming, filtering, and playing audio and video",
+  "docs": {
+    "url": "https://ffmpeg.org/documentation.html",
+    "sections": [
+      "ffmpeg",
+      "ffprobe",
+      "ffplay",
+      "libavcodec",
+      "libavformat",
+      "libavfilter",
+      "libavdevice",
+      "libswscale",
+      "libswresample"
+    ]
+  },
+  "github": {
+    "org": "FFmpeg",
+    "repo": "FFmpeg",
+    "branch": "master"
+  },
+  "examples": [
+    "video transcoding and codec selection",
+    "audio encoding and resampling",
+    "filter graphs and complex filters",
+    "HLS and DASH streaming",
+    "subtitle handling",
+    "hardware acceleration (VAAPI/NVENC/VideoToolbox)",
+    "concat and segment muxer",
+    "stream copy",
+    "thumbnail extraction",
+    "loudnorm and audio normalisation"
+  ]
+}

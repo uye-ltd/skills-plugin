@@ -29,6 +29,15 @@ Use the selected tool's `docs.url` as the starting point. Fetch the page with `W
   If the answer is still incomplete, tell the user which section to read manually and
   provide the direct URL.
 
+**WebSearch fallback:** If a `WebFetch` call returns a 404, redirect loop, empty body, or
+JavaScript-only SPA shell (no meaningful text content), fall back to:
+```
+WebSearch site:<docs-domain> <2-3 keywords from user's question>
+```
+Replace `<docs-domain>` with the hostname from `docs.url` (e.g. `grafana.com`).
+Follow the most relevant result URL to fetch the actual page. Count the WebSearch
+and its followed fetch together as one page toward the 3-page limit.
+
 ## Step 5 — Answer
 
 Answer the user's question citing the specific documentation page(s) fetched.

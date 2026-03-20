@@ -1,0 +1,41 @@
+{
+  "name": "rabbitmq",
+  "description": "Message broker supporting AMQP, MQTT, and STOMP — exchanges, queues, bindings, routing, and clustering",
+  "docs": {
+    "url": "https://www.rabbitmq.com/docs",
+    "api_url": "https://www.rabbitmq.com/docs/management#http-api",
+    "sections": [
+      "tutorials",
+      "publishers",
+      "consumers",
+      "queues",
+      "exchanges",
+      "bindings",
+      "routing",
+      "reliability",
+      "clustering",
+      "ha",
+      "access-control",
+      "monitoring",
+      "prometheus",
+      "streams"
+    ]
+  },
+  "github": {
+    "org": "rabbitmq",
+    "repo": "rabbitmq-server",
+    "branch": "main"
+  },
+  "examples": [
+    "direct and topic exchanges",
+    "dead letter queues",
+    "message TTL",
+    "quorum queues",
+    "publisher confirms",
+    "consumer acknowledgements",
+    "clustering and HA",
+    "federation",
+    "shovel plugin",
+    "management API"
+  ]
+}

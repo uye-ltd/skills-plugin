@@ -1,0 +1,22 @@
+{
+  "name": "loki",
+  "description": "Log aggregation system by Grafana \u2014 LogQL queries, label-based indexing, log streams, and ruler alerting",
+  "docs": {
+    "url": "https://grafana.com/docs/loki/latest/",
+    "sections": []
+  },
+  "github": {
+    "org": "grafana",
+    "repo": "loki",
+    "branch": "main"
+  },
+  "examples": [
+    "LogQL queries",
+    "label design",
+    "log streams",
+    "Promtail configuration",
+    "ruler alerting",
+    "retention policies",
+    "multi-tenancy"
+  ]
+}

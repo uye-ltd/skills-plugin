@@ -1,0 +1,22 @@
+{
+  "name": "trivy",
+  "description": "Comprehensive vulnerability and misconfiguration scanner \u2014 containers, filesystems, IaC, SBOMs, and secret detection",
+  "docs": {
+    "url": "https://aquasecurity.github.io/trivy/",
+    "sections": []
+  },
+  "github": {
+    "org": "aquasecurity",
+    "repo": "trivy",
+    "branch": "main"
+  },
+  "examples": [
+    "container image scanning",
+    "IaC scanning",
+    "SBOM generation",
+    "secret detection",
+    "CI integration",
+    "severity filtering",
+    "ignore policies"
+  ]
+}

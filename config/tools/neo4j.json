@@ -1,0 +1,20 @@
+{
+  "name": "neo4j",
+  "description": "Graph database platform \u2014 Cypher queries, graph data modeling, indexes, constraints, and graph algorithms",
+  "docs": {
+    "url": "https://neo4j.com/docs/",
+    "sections": []
+  },
+  "github": {
+    "org": "neo4j",
+    "repo": "neo4j",
+    "branch": "main"
+  },
+  "examples": [
+    "Cypher queries",
+    "graph data modeling",
+    "indexes and constraints",
+    "APOC procedures",
+    "graph algorithms"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "pihole",
+  "description": "Network-level DNS ad blocker \u2014 blocklists, allowlists, DHCP server, query logging, and custom DNS records",
+  "docs": {
+    "url": "https://docs.pi-hole.net/",
+    "sections": []
+  },
+  "github": {
+    "org": "pi-hole",
+    "repo": "pi-hole",
+    "branch": "master"
+  },
+  "examples": [
+    "blocklist management",
+    "allowlists",
+    "custom DNS records",
+    "DHCP configuration",
+    "query logging",
+    "group management"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "tailscale",
+  "description": "Zero-config mesh VPN \u2014 device authentication, ACL policies, subnet routing, exit nodes, and MagicDNS",
+  "docs": {
+    "url": "https://tailscale.com/kb/",
+    "sections": []
+  },
+  "github": {
+    "org": "tailscale",
+    "repo": "tailscale",
+    "branch": "main"
+  },
+  "examples": [
+    "ACL policies",
+    "subnet routing",
+    "exit nodes",
+    "MagicDNS",
+    "device authentication",
+    "Tailscale SSH",
+    "funnel"
+  ]
+}
