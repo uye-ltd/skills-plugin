@@ -1,4 +1,4 @@
-## [0.2.0] - 2026-03-18
+## [0.2.1] - 2026-03-20
 
 ### Added
 - TODO: list new skills, agents, or features
@@ -8,6 +8,21 @@
 
 ### Fixed
 - TODO: list bug fixes
+
+### Commits since 
+- eb6bae8 feat: reference skills
+- 4a5d0b6 refactor: major refactor
+- 5d33ba8 refactor: major refactor
+- bb3fff5 refactor: major refactor
+- b73ea4e feat: common skills and agents clenup
+- 52a840a feat: styleguide for python, go, js
+- e7ca22a feat: initial structure
+- 4a42a34 Initial commit
+
+## [0.2.0] - 2026-03-18
+
+### Added
+- Skills for idiomatic Python / Go / TS
 
 ### Commits since 
 - 5d33ba8 refactor: major refactor
