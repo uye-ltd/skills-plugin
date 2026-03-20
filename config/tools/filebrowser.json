@@ -1,0 +1,19 @@
+{
+  "name": "filebrowser",
+  "description": "Web-based file manager for self-hosted environments",
+  "docs": {
+    "url": "https://filebrowser.org/",
+    "sections": ["configuration", "installation", "docker", "api"]
+  },
+  "github": {
+    "org": "filebrowser",
+    "repo": "filebrowser",
+    "branch": "master"
+  },
+  "examples": [
+    "file permissions",
+    "reverse proxy setup",
+    "docker-compose configuration",
+    "user management"
+  ]
+}

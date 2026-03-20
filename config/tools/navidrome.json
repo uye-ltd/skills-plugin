@@ -1,0 +1,30 @@
+{
+  "name": "navidrome",
+  "description": "Self-hosted music streaming server compatible with the Subsonic API",
+  "docs": {
+    "url": "https://www.navidrome.org/docs/",
+    "sections": [
+      "installation",
+      "configuration",
+      "features",
+      "library",
+      "integrations",
+      "administration",
+      "developer"
+    ]
+  },
+  "github": {
+    "org": "navidrome",
+    "repo": "navidrome",
+    "branch": "master"
+  },
+  "examples": [
+    "configuration options",
+    "environment variables",
+    "Docker setup",
+    "transcoding",
+    "library scanning",
+    "authentication",
+    "Subsonic API"
+  ]
+}

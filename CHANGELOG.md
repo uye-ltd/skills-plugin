@@ -26,7 +26,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-## [1.0.0] - 2026-03-14
+## [0.1.0] - 2026-03-14
 
 ### Added
 - Initial plugin scaffold with namespace `uye`

@@ -202,6 +202,13 @@ Skills are invoked as `/uye:<skill-name>` or automatically by the pipeline agent
 | | `dependency-audit` | — |
 | | `input-validation` | — |
 | | `auth-review` | — |
+| `reference` | `reference-docs` | standalone |
+| | `reference-help` | standalone |
+| | `reference-sourcecode` | standalone |
+
+> Reference skills are dormant until tool names are listed in `settings.json → tools`.
+> Tool configs in `config/tools/` are schema-validated by `validate.sh` (required fields, name matches filename).
+> The three reference skills share a common resolution preamble via `skills/templates/reference-base.md`.
 
 ### Python
 
@@ -250,6 +257,7 @@ Skills are invoked as `/uye:<skill-name>` or automatically by the pipeline agent
 | `pipeline.skipReview` | `false` | Skip Reviewer agent (prototyping only) |
 | `pipeline.skipPlanner` | `false` | Skip Planner for small tasks |
 | `pipeline.autoPerformance` | `false` | Run Performance agent automatically after every PASS |
+| `tools` | `[]` | Enable reference skills: `["filebrowser"]`, `["caddy", "fail2ban"]` — see [`docs/tools-config.md`](docs/tools-config.md) for all bundled tools |
 
 ---
 
@@ -296,6 +304,27 @@ claude --plugin-dir /path/to/skills-plugin
 
 ## Adding new components
 
+### New tool (reference skill family)
+
+```bash
+./scripts/add-tool.sh \
+  --name grafana \
+  --description "Metrics dashboarding and alerting platform" \
+  --docs-url "https://grafana.com/docs/grafana/latest/" \
+  --github grafana/grafana \
+  --branch main \
+  --examples "dashboard provisioning,alerting rules,data sources"
+# → creates config/tools/grafana.json
+
+# Enable in any project's settings.json:
+#   { "tools": ["grafana"] }
+
+# Or copy config into a project that can't reference the plugin path:
+./scripts/enable-tool.sh grafana /path/to/project
+```
+
+See [`docs/tools-config.md`](docs/tools-config.md) for the full schema.
+
 ### New skill
 
 ```bash
@@ -341,7 +370,7 @@ If the subcategory is new, add it to the `"skills"` array in `.claude-plugin/plu
 ## Validation and utilities
 
 ```bash
-# Validate plugin structure (frontmatter, paths, duplicates, executability)
+# Validate plugin structure (frontmatter, paths, duplicates, executability, tool configs)
 ./scripts/validate.sh
 ./scripts/validate.sh --strict    # treat warnings as errors
 
@@ -376,16 +405,19 @@ skills-plugin/
 │   ├── debugger.md
 │   ├── refactorer.md
 │   └── performance.md
+├── config/
+│   └── tools/                        # one JSON definition per supported tool
 ├── docs/
-│   └── contracts/                    # agent handoff schemas
-│       ├── routing-block.md
-│       ├── context-summary.md
-│       ├── implementation-plan.md
-│       ├── execution-summary.md
-│       ├── review-report.md
-│       ├── debug-report.md
-│       ├── refactoring-summary.md
-│       └── performance-report.md
+│   ├── contracts/                    # agent handoff schemas
+│   │   ├── routing-block.md
+│   │   ├── context-summary.md
+│   │   ├── implementation-plan.md
+│   │   ├── execution-summary.md
+│   │   ├── review-report.md
+│   │   ├── debug-report.md
+│   │   ├── refactoring-summary.md
+│   │   └── performance-report.md
+│   └── tools-config.md               # tool definition schema + enable-tool usage
 ├── skills/
 │   ├── common/
 │   │   ├── navigation/               # read-file, map-project, find-symbol, …
@@ -393,7 +425,8 @@ skills-plugin/
 │   │   ├── performance/              # suggest-cache, detect-n-plus-one
 │   │   ├── docs/                     # docs-write, docs-review, …
 │   │   ├── devops/                   # dockerfile, ci-pipeline, k8s, …
-│   │   └── security/                 # infra/boundary-level: owasp-check, input-validation, …
+│   │   ├── security/                 # infra/boundary-level: owasp-check, input-validation, …
+│   │   └── reference/               # reference-docs, reference-help, reference-sourcecode
 │   ├── python/
 │   │   ├── analysis/                 # py-code-review, py-check-bugs
 │   │   ├── generation/               # py-generate-func, py-generate-class, …
@@ -404,6 +437,7 @@ skills-plugin/
 │   ├── javascript/                   # same 6 subcategories
 │   ├── go/                           # same 6 subcategories
 │   └── templates/                    # base templates for parallel skill families
+│                                     # (analyze-trace, detect-bugs, reference-base, …)
 ├── hooks/
 │   └── hooks.json                    # PostToolUse: ruff format+fix on .py files
 ├── scripts/
@@ -413,6 +447,8 @@ skills-plugin/
 │   ├── new-agent.sh                  # scaffold: <name>
 │   ├── new-language.sh               # scaffold full language tree
 │   ├── new-category.sh               # scaffold new common category
+│   ├── add-tool.sh                   # add a new tool definition to config/tools/
+│   ├── enable-tool.sh                # copy tool config into a project directory
 │   ├── validate.sh                   # lint plugin structure
 │   ├── list-skills.sh                # browse registered skills
 │   ├── release.sh                    # bump version + CHANGELOG

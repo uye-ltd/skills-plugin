@@ -1,0 +1,32 @@
+{
+  "name": "fail2ban",
+  "description": "Security daemon that monitors log files and blocks IPs conducting repeated failed login attempts via firewall rules",
+  "docs": {
+    "url": "https://fail2ban.readthedocs.io/en/latest/",
+    "sections": [
+      "installation",
+      "configuration",
+      "jails",
+      "filters",
+      "actions",
+      "client",
+      "server",
+      "development"
+    ]
+  },
+  "github": {
+    "org": "fail2ban",
+    "repo": "fail2ban",
+    "branch": "master"
+  },
+  "examples": [
+    "ban SSH brute force",
+    "Apache authentication failure blocking",
+    "custom filters",
+    "custom jails",
+    "ban duration and retry limits",
+    "IPv6 blocking",
+    "multi-service log monitoring",
+    "custom actions"
+  ]
+}

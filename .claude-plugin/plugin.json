@@ -5,5 +5,14 @@
   "author": {
     "name": "uye",
     "email": "placeholder@example.com"
-  }
+  },
+  "skills": [
+    "./skills/common/navigation",
+    "./skills/common/analysis",
+    "./skills/common/performance",
+    "./skills/common/security",
+    "./skills/common/docs",
+    "./skills/common/devops",
+    "./skills/common/reference"
+  ]
 }

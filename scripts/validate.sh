@@ -190,6 +190,66 @@ done < <(find "$PLUGIN_DIR/agents" -name "*.md" | sort)
 
 echo ""
 
+# ── 7. Tool configs ───────────────────────────────────────────────────────────
+echo "── Tool configs ──"
+TOOL_ERRORS=0
+TOOL_COUNT=0
+
+while IFS= read -r tool_file; do
+  rel="${tool_file#$PLUGIN_DIR/}"
+  stem=$(basename "$tool_file" .json)
+  ((TOOL_COUNT++)) || true
+
+  result=$(python3 - "$tool_file" "$stem" <<'PYEOF'
+import json, sys
+
+path, stem = sys.argv[1], sys.argv[2]
+try:
+    with open(path) as f:
+        d = json.load(f)
+except json.JSONDecodeError as e:
+    print(f"invalid JSON: {e}")
+    sys.exit(1)
+
+errors = []
+for key in ("name", "description"):
+    if not d.get(key):
+        errors.append(f"missing required field '{key}'")
+
+github = d.get("github", {})
+for key in ("org", "repo", "branch"):
+    if not github.get(key):
+        errors.append(f"missing required field 'github.{key}'")
+
+docs = d.get("docs", {})
+if not docs.get("url"):
+    errors.append("missing required field 'docs.url'")
+
+if d.get("name") and d["name"] != stem:
+    errors.append(f"'name' field '{d['name']}' does not match filename stem '{stem}'")
+
+for e in errors:
+    print(e)
+sys.exit(len(errors))
+PYEOF
+  )
+  exit_code=$?
+
+  if [ $exit_code -ne 0 ]; then
+    while IFS= read -r msg; do
+      error "$rel: $msg"
+    done <<< "$result"
+    ((TOOL_ERRORS++)) || true
+  fi
+done < <(find "$PLUGIN_DIR/config/tools" -name "*.json" 2>/dev/null | sort)
+
+if [ "$TOOL_ERRORS" -eq 0 ] && [ "$TOOL_COUNT" -gt 0 ]; then
+  green "$TOOL_COUNT tool configs validated"
+elif [ "$TOOL_COUNT" -eq 0 ]; then
+  green "no tool configs found (skipping)"
+fi
+echo ""
+
 # ── Summary ───────────────────────────────────────────────────────────────────
 echo "── Summary ──"
 if [ "$ERRORS" -gt 0 ]; then

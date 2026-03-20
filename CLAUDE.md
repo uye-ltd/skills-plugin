@@ -39,6 +39,7 @@ skill set for Executor and Reviewer. All other agents use common skills only.
 | `pipeline.skipReview` | `false` | Skip Reviewer agent (prototyping only) |
 | `pipeline.skipPlanner` | `false` | Skip Planner for small tasks |
 | `pipeline.autoPerformance` | `false` | Run Performance agent automatically after every PASS |
+| `tools` | `[]` | List of tool names to enable reference skills: `["filebrowser"]` |
 
 ## Repository layout
 
@@ -53,6 +54,7 @@ skills/
     security/                — infra/boundary-level: owasp-check, input-validation, …
     docs/                    — docs-write, docs-review, …
     devops/                  — dockerfile, ci-pipeline, k8s, …
+    reference/               — reference-docs, reference-help, reference-sourcecode
   python/ javascript/ go/    — language-specific skills
     analysis/                — code-review, check-bugs  (used by Reviewer)
     generation/              — generate-func, …         (used by Executor)
@@ -60,8 +62,13 @@ skills/
     testing/                 — generate-test, …         (used by Executor + Reviewer)
     debugging/               — analyze-trace, …         (used by Debugger)
     performance/             — language-specific perf   (used by Performance)
-  templates/                 — base templates for parallel skill families (analyze-trace, detect-bugs, …)
+  templates/                 — base templates for parallel skill families
+                               (analyze-trace, detect-bugs, reference-base, …)
+config/
+  tools/                     — one JSON definition per supported external tool
+                               (validated by validate.sh: required fields, name matches filename)
 docs/contracts/              — input/output schemas for each agent handoff
+docs/tools-config.md         — tool definition schema + enable-tool usage
 hooks/hooks.json             — hook configuration (JSON)
 scripts/                     — install, scaffold, validate, release utilities
 ```
@@ -102,9 +109,10 @@ Rules:
 - Skill names are prefixed with language: `py-generate-func`, `go-check-goroutine`, `js-add-types`
 - Common skills have no prefix: `read-file`, `detect-code-smells`
 - The `description` is used by Claude to decide when to invoke the skill — be specific
-- `$ARGUMENTS` captures user-provided input; always include it at the end of the prompt
+- `$ARGUMENTS` captures user-provided input; wrap it in a `## User question` section and add a fallback ("If no question is provided, ask the user…") so Claude handles empty invocations gracefully
 - Keep prompts actionable: tell Claude what to do, what to output, what format to use
 - If a skill is part of a parallel family (e.g. `analyze-trace` exists in py/js/go), set `template:` to the shared base in `skills/templates/` and keep only language-specific details in the skill body. `validate.sh` checks that the referenced template exists.
+- The three reference skills (`reference-docs`, `reference-help`, `reference-sourcecode`) share a common preamble via `template: reference-base`. Do not duplicate Steps 1–3 in reference skill bodies — edit `skills/templates/reference-base.md` instead.
 
 Scaffold: `./scripts/new-skill.sh <language|common> <subcategory> <skill-name>`
 
@@ -139,6 +147,31 @@ Use the scaffold script — it creates all 6 subcategories and registers paths i
 
 Then fill in the generated placeholder SKILL.md files.
 
+## Adding a new tool (reference skill family)
+
+Tool definitions live in `config/tools/<name>.json`. The three reference skills
+(`reference-docs`, `reference-help`, `reference-sourcecode`) load these at runtime.
+
+```bash
+# Add a new tool definition to the plugin
+./scripts/add-tool.sh \
+  --name grafana \
+  --description "Metrics dashboarding and alerting platform" \
+  --docs-url "https://grafana.com/docs/grafana/latest/" \
+  --github grafana/grafana \
+  --branch main \
+  --examples "dashboard provisioning,alerting rules,data sources"
+# → creates config/tools/grafana.json
+
+# Enable tools in a project by adding to settings.json:
+#   { "tools": ["grafana"] }
+
+# Alternatively, copy the config into the project directory:
+./scripts/enable-tool.sh grafana /path/to/project
+```
+
+See `docs/tools-config.md` for the full schema and all bundled tool definitions.
+
 ## Adding a new common category
 
 ```bash
@@ -155,6 +188,7 @@ Then fill in the generated placeholder SKILL.md files.
 #   - all skill paths in plugin.json exist on disk
 #   - each pipeline agent has a matching contract in docs/contracts/
 #   - hook scripts are executable
+#   - config/tools/*.json: valid JSON, required fields present, name matches filename stem
 ./scripts/validate.sh
 ./scripts/validate.sh --strict    # treat warnings as errors
 

@@ -8,7 +8,7 @@ used-by: context,planner,reviewer,performance
 Identify code smells in the specified code.
 
 Check for:
-- **Long functions**: functions over 50 lines doing more than one thing
+- **Long functions**: functions ohover 50 lines doing more than one thing
 - **Long parameter lists**: more than 4–5 parameters (suggest a config object/struct)
 - **Deep nesting**: more than 1-2 levels of indentation
 - **Duplicated logic**: copy-pasted code blocks that should be extracted

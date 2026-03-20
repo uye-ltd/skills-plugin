@@ -9,5 +9,6 @@
     "skipReview": false,        // Skip Reviewer agent (prototyping only)
     "skipPlanner": false,       // Skip Planner for small tasks
     "autoPerformance": false    // Run Performance agent automatically after every PASS
-  }
+  },
+  "tools": []                   // Enable reference skills: ["filebrowser", "traefik", …]
 }

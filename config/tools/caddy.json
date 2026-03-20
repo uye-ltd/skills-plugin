@@ -1,0 +1,36 @@
+{
+  "name": "caddy",
+  "description": "Fast, extensible multi-platform web server with automatic HTTPS, written in Go",
+  "docs": {
+    "url": "https://caddyserver.com/docs/",
+    "sections": [
+      "install",
+      "caddyfile",
+      "json-config",
+      "api",
+      "automatic-https",
+      "reverse-proxy",
+      "static-files",
+      "modules",
+      "tutorials",
+      "articles",
+      "faq"
+    ]
+  },
+  "github": {
+    "org": "caddyserver",
+    "repo": "caddy",
+    "branch": "master"
+  },
+  "examples": [
+    "reverse proxy",
+    "automatic HTTPS",
+    "static file serving",
+    "Caddyfile configuration",
+    "JSON config API",
+    "HTTP/2 and HTTP/3",
+    "running as a service",
+    "multi-site hosting",
+    "plugin modules"
+  ]
+}
