@@ -20,12 +20,17 @@ Valid action verbs: `Add`, `Modify`, `Create`, `Delete`, `Move`, `Rename`
 
 The "why" explains the business or design reason, not the implementation detail. If a step depends on a prior step, note it: `(depends on step N)`.
 
+## Multi-language variant
+
+For multi-language tasks, prefix each step with the language in brackets: `[Go]`, `[JavaScript]`, etc. Cross-language contract steps (e.g. defining a shared API shape) must appear before language-specific steps that depend on them. The Risks section must include a cross-language compatibility item.
+
 ## Invariants
 
 - Planner must not write code
 - Steps must be independently verifiable — each should leave the code in a runnable state
 - Maximum step scope: one logical concern per step, one file where possible
 - Every file referenced in steps must exist on disk or be explicitly created by a prior step
+- In multi-language plans, dependency between steps of different languages must be made explicit
 
 ## Example
 

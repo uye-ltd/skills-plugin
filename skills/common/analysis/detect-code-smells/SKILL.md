@@ -8,7 +8,7 @@ used-by: context,planner,reviewer,performance
 Identify code smells in the specified code.
 
 Check for:
-- **Long functions**: functions ohover 50 lines doing more than one thing
+- **Long functions**: functions over 50 lines doing more than one thing
 - **Long parameter lists**: more than 4–5 parameters (suggest a config object/struct)
 - **Deep nesting**: more than 1-2 levels of indentation
 - **Duplicated logic**: copy-pasted code blocks that should be extracted
@@ -19,6 +19,10 @@ Check for:
 - **Feature envy**: a function that uses another module's data more than its own
 - **Inappropriate intimacy**: two modules knowing too much about each other's internals
 
-Output: grouped list by severity (high / medium / low) with file, line, smell name, and a concrete refactoring suggestion.
+Output: grouped list by severity (critical / major / minor / nit) with file, line, smell name, and a concrete refactoring suggestion.
+
+## User question
 
 $ARGUMENTS
+
+If no code is provided, ask the user to specify a file or paste the code to analyse.

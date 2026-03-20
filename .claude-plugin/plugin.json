@@ -1,10 +1,10 @@
 {
   "name": "uye",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Organisation-wide Claude Code plugin \u2014 multi-agent pipeline with language routing for Python, JavaScript, and Go.",
   "author": {
     "name": "uye",
-    "email": "placeholder@example.com"
+    "email": "org@uye.rocks"
   },
   "skills": [
     "./skills/common/navigation",
@@ -14,5 +14,15 @@
     "./skills/common/docs",
     "./skills/common/devops",
     "./skills/common/reference"
+  ],
+  "agents": [
+    "./agents/language-router.md",
+    "./agents/context.md",
+    "./agents/planner.md",
+    "./agents/executor.md",
+    "./agents/reviewer.md",
+    "./agents/debugger.md",
+    "./agents/refactorer.md",
+    "./agents/performance.md"
   ]
 }

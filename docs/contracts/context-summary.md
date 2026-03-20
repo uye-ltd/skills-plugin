@@ -1,7 +1,7 @@
 # Contract: Context Summary
 
 Produced by: Context agent
-Consumed by: Planner agent
+Consumed by: Planner agent (or Executor if skipPlanner=true)
 
 ## Fields
 
@@ -9,10 +9,24 @@ Consumed by: Planner agent
 |-------|----------|------|-------------|
 | Language | yes | enum: python, javascript, go | Copied from Routing Block |
 | Files involved | yes | list | At least one entry: `path: one-line purpose` |
+| Files noted but not read | conditional | list | Files over `contextMaxFiles` limit; `path: why skipped` |
 | Key symbols | conditional | list | Required when specific symbols are relevant; omit if none |
 | Relevant API surface | conditional | prose | Required when public interface is affected |
 | Dependencies and constraints | yes | prose | Use "None identified" if none |
 | Open questions | yes | prose | Use "None" if none |
+
+## Multi-language variant
+
+For multi-language tasks, produce one labeled section per language followed by a shared cross-language section:
+
+```
+### [Go] Language / [Go] Files involved / … / [Go] Open questions
+### [JavaScript] Language / [JavaScript] Files involved / … / [JavaScript] Open questions
+### Cross-language dependencies
+<shared API contracts, data formats, or interface boundaries between the two languages>
+```
+
+Each per-language section has the same fields as the single-language variant. The cross-language section is required when the languages share a boundary (REST API, shared schema, etc.).
 
 ## Invariants
 
@@ -20,6 +34,7 @@ Consumed by: Planner agent
 - All file references must use relative paths from the project root
 - If a file is too large to summarise fully, note which sections were skipped and why
 - Language value must be copied verbatim from the Routing Block
+- Files over `contextMaxFiles` must appear in `Files noted but not read` — never silently omitted
 
 ## Example
 

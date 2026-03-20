@@ -57,18 +57,18 @@ Multi-agent pipeline with language routing for Python, JavaScript, and Go.
       │ generate-test │                │ detect-smells │
       │ update-imports│                │ analyze-compl │
       └───────┬───────┘                │ verify-tests  │
+              │                        │ secrets-scan  │
+              │                        │ owasp-check   │
               │                        └───────┬───────┘
               │◄── ITERATE: fix instructions ──┤
               │                                │
               │                           PASS ▼
               │                        ┌───────────────┐
-              │                        │  Refactorer   │  optional cleanup
+              │                        │  Refactorer   │  if smells flagged
               │                        │ ──────────── │
               │                        │ extract-func  │
               │                        │ split-module  │
-              │                        │ remove-dup    │
-              │                        │ rename-sym    │
-              │                        │ apply-types   │
+              │                        │ verify-tests  │  ← after each step
               │                        └───────────────┘
               │
               │◄── fix ─────────────────────┐
@@ -79,42 +79,48 @@ Multi-agent pipeline with language routing for Python, JavaScript, and Go.
       │ analyze-trace │             │ analyze-compl │
       │ trace-vars    │             │ suggest-cache │
       │ detect-bugs   │             │ detect-n+1    │
-      │ check-async/  │             │ suggest-vec   │
-      │ check-goroutne│             │ detect-alloc  │
-      └───────────────┘             └───────────────┘
+      └───────────────┘             └──────┬────────┘
+                                           │ FIX_NOW
+                                           ▼
+                                    ┌───────────────┐
+                                    │   Executor    │  applies perf fix
+                                    └───────────────┘
 
 † Performance triggers when: Reviewer raises ≥ 2 major perf issues;
-  pipeline.autoPerformance: true in settings.json and Reviewer issues PASS;
+  pipeline.autoPerformance: true and Reviewer issues PASS;
   Planner detects a hot path; or user explicitly requests it.
+  FIX_NOW routes to Executor. MEASURE_FIRST surfaces profiling commands to user.
 ```
 
 ---
 
 ## Language Router
 
-Entry point for every code task. Detects language and routes Executor and Reviewer to the correct skill set. All other agents remain language-agnostic.
+Entry point for every code task. Reads `settings.json`, detects language, and routes Executor and Reviewer to the correct skill set. All other agents remain language-agnostic.
 
 **Detection order:**
 
 | Priority | Signal | Example |
 |----------|--------|---------|
-| 1 | Explicit instruction | "fix this Go code", "in TypeScript" |
-| 2 | File extension | `.py` → Python · `.ts`/`.js` → JS · `.go` → Go |
-| 3 | Project markers | `pyproject.toml` · `go.mod` · `package.json` |
-| 4 | Imports / shebang | `#!/usr/bin/env python` · `import (` · `require()` |
+| 1 | `settings.json` `language` pin | `"language": "go"` in settings |
+| 2 | Explicit instruction | "fix this Go code", "in TypeScript" |
+| 3 | File extension | `.py` → Python · `.ts`/`.js` → JS · `.go` → Go |
+| 4 | Project markers | `pyproject.toml` · `go.mod` · `package.json` |
+| 5 | Imports / shebang | `#!/usr/bin/env python` · `import (` · `require()` |
 
 **Routing output:**
 
 ```
 LANGUAGE: python
 REASON:   file.py extension
-EXECUTOR SKILLS: skills/python/generation/, skills/python/refactoring/
-REVIEWER SKILLS: skills/python/analysis/, skills/python/debugging/
-COMMON SKILLS:   skills/common/navigation/, skills/common/analysis/
-NEXT: context-agent
+EXECUTOR_SKILLS: skills/python/generation/, skills/python/refactoring/, skills/python/testing/
+REVIEWER_SKILLS: skills/python/analysis/, skills/python/debugging/
+COMMON_SKILLS:   skills/common/navigation/, skills/common/analysis/
+PIPELINE: skipPlanner=false skipReview=false maxIterations=3 maxDebugCycles=2 contextMaxFiles=20
+NEXT: context
 ```
 
-**Multi-language tasks** (e.g. Go backend + TS frontend): each language is processed independently with its own skills; common skills apply across all.
+**Multi-language tasks** (e.g. Go backend + TS frontend): one routing block per language; `COMMON_SKILLS` and `PIPELINE` emitted once after all per-language blocks. Every subsequent agent (Context, Planner, Executor, Reviewer) produces labeled per-language sections within a single output document.
 
 ---
 
@@ -138,16 +144,35 @@ Executor         →  generates code (language-specific)
      ▼
 Reviewer         →  checks code (language-specific)
      │
-     ├─► PASS    →  Refactorer (optional cleanup)  →  done
+     ├─► PASS    →  Refactorer (if smells/complexity flagged)  →  done
      │
      ├─► ITERATE →  Executor (with specific fix instructions)
+     │                   │
+     │                   └─► repeat up to maxIterations (default: 3)
+     │                             │
+     │                             └─► BLOCKED  →  user (unresolved issues listed)
      │
-     └─► DEBUG   →  Debugger  →  root cause + fix  →  Executor
-                         │
-                         └─► repeat until Reviewer passes
+     ├─► DEBUG   →  Debugger  →  root cause + fix  →  Executor
+     │                   │                               │
+     │                   └─► BLOCKED  →  user            └─► Reviewer
+     │                       (missing info)                    │
+     │                                         up to maxDebugCycles (default: 2)
+     │                                                    │
+     │                                          BLOCKED  ─┘  user (debug loop limit)
+     │
+     └─► BLOCKED →  user (max iterations reached)
 ```
 
-The loop continues until the Reviewer issues a PASS. Performance analysis is triggered automatically when the Reviewer flags ≥ 2 major perf issues, or when `pipeline.autoPerformance: true` is set; it can also be invoked manually by the Planner or the user at any point.
+The loop continues until the Reviewer issues a PASS or a limit is hit. Two guards prevent infinite loops:
+
+- **`pipeline.maxIterations`** (default: 3) — caps the Executor↔Reviewer round trips. On breach, Reviewer emits `BLOCKED` listing all unresolved issues for the user.
+- **`pipeline.maxDebugCycles`** (default: 2) — caps how many times the Reviewer can escalate to `DEBUG`. On breach, Reviewer emits `BLOCKED` instead of re-escalating.
+
+If the Debugger itself cannot determine a root cause, it emits `BLOCKED` with a concrete question for the user rather than guessing.
+
+The Execution Summary includes a before/after diff per file so the Reviewer works from diffs rather than re-reading full files on each iteration. Every review pass runs `secrets-scan`, `owasp-check`, and `input-validation` automatically — results appear in a required `Security findings` section.
+
+Performance analysis is triggered automatically when the Reviewer flags ≥ 2 major perf issues, or when `pipeline.autoPerformance: true` is set; it can also be invoked manually by the Planner or the user. When the Performance agent issues `FIX_NOW`, it hands off a structured `Performance Fix Request` to the Executor; `MEASURE_FIRST` surfaces profiling commands to the user without touching code.
 
 ---
 
@@ -197,10 +222,10 @@ Skills are invoked as `/uye:<skill-name>` or automatically by the pipeline agent
 | | `k8s` | — |
 | | `debug-pipeline` | — |
 | | `security-scan` | — |
-| `security` | `secrets-scan` | — |
-| | `owasp-check` | — |
+| `security` | `secrets-scan` | Reviewer |
+| | `owasp-check` | Reviewer |
 | | `dependency-audit` | — |
-| | `input-validation` | — |
+| | `input-validation` | Reviewer |
 | | `auth-review` | — |
 | `reference` | `reference-docs` | standalone |
 | | `reference-help` | standalone |
@@ -223,7 +248,7 @@ Skills are invoked as `/uye:<skill-name>` or automatically by the pipeline agent
 | `analysis` | `py-code-review`, `py-check-bugs` | Reviewer |
 | `generation` | `py-generate-func`, `py-generate-class`, `py-update-imports` | Executor |
 | `refactoring` | `py-extract-func`, `py-split-module`, `py-remove-dup`, `py-rename-sym`, `py-apply-types` | Refactorer |
-| `testing` | `py-generate-test`, `py-verify-tests` | Executor, Reviewer |
+| `testing` | `py-generate-test`, `py-verify-tests` | Executor, Reviewer, Refactorer |
 | `debugging` | `py-analyze-trace`, `py-trace-vars`, `py-detect-bugs`, `py-check-async` | Debugger |
 | `performance` | `py-suggest-vectorize`, `py-profile-hotspot` | Performance |
 
@@ -234,7 +259,7 @@ Skills are invoked as `/uye:<skill-name>` or automatically by the pipeline agent
 | `analysis` | `js-code-review`, `js-check-bugs` | Reviewer |
 | `generation` | `js-generate-func`, `js-generate-class`, `js-generate-component`, `js-update-imports` | Executor |
 | `refactoring` | `js-extract-func`, `js-remove-dup`, `js-rename-sym`, `js-add-types` | Refactorer |
-| `testing` | `js-generate-test`, `js-verify-tests` | Executor, Reviewer |
+| `testing` | `js-generate-test`, `js-verify-tests` | Executor, Reviewer, Refactorer |
 | `debugging` | `js-analyze-trace`, `js-trace-vars`, `js-detect-bugs`, `js-check-async` | Debugger |
 | `performance` | `js-detect-rerender`, `js-suggest-memoize` | Performance |
 
@@ -245,7 +270,7 @@ Skills are invoked as `/uye:<skill-name>` or automatically by the pipeline agent
 | `analysis` | `go-code-review`, `go-check-bugs` | Reviewer |
 | `generation` | `go-generate-func`, `go-generate-struct`, `go-generate-interface`, `go-update-imports` | Executor |
 | `refactoring` | `go-extract-func`, `go-split-module`, `go-remove-dup`, `go-rename-sym` | Refactorer |
-| `testing` | `go-generate-test`, `go-generate-benchmark`, `go-verify-tests` | Executor, Reviewer |
+| `testing` | `go-generate-test`, `go-generate-benchmark`, `go-verify-tests` | Executor, Reviewer, Refactorer |
 | `debugging` | `go-analyze-trace`, `go-trace-vars`, `go-detect-bugs`, `go-check-goroutine` | Debugger |
 | `performance` | `go-suggest-pool`, `go-detect-alloc` | Performance |
 
@@ -259,10 +284,13 @@ Skills are invoked as `/uye:<skill-name>` or automatically by the pipeline agent
 |-----|---------|-------------|
 | `agent` | `"language-router"` | Entry-point agent for all requests |
 | `outputStyle` | `"Explanatory"` | Response verbosity: `Explanatory` \| `Concise` |
-| `language` | `null` | Pin language; skips auto-detection in Language Router |
+| `language` | `null` | Pin language; takes priority over all detection rules |
 | `pipeline.skipReview` | `false` | Skip Reviewer agent (prototyping only) |
-| `pipeline.skipPlanner` | `false` | Skip Planner for small tasks |
+| `pipeline.skipPlanner` | `false` | Skip Planner; Context hands off directly to Executor |
 | `pipeline.autoPerformance` | `false` | Run Performance agent automatically after every PASS |
+| `pipeline.maxIterations` | `3` | Max Executor↔Reviewer round trips before `BLOCKED` |
+| `pipeline.maxDebugCycles` | `2` | Max DEBUG decisions before Reviewer emits `BLOCKED` instead of re-escalating |
+| `context.maxFiles` | `20` | Max files Context agent reads fully; extras are noted but skipped |
 | `tools` | `[]` | Enable reference skills: `["postgres", "redis"]`. Supports version pinning: `[{"name": "redis", "version": "7.2"}]` — overrides `github.branch` for source and config lookups. See [`docs/tools-config.md`](docs/tools-config.md) for all bundled tools |
 
 ---
@@ -415,6 +443,7 @@ If the subcategory is new, add it to the `"skills"` array in `.claude-plugin/plu
 
 # Example — creates all 6 subcategories and registers paths in plugin.json
 ./scripts/new-language.sh rust
+# → skills named rust-code-review, rust-generate-func, etc.
 ```
 
 ### New common category
@@ -440,7 +469,8 @@ If the subcategory is new, add it to the `"skills"` array in `.claude-plugin/plu
 ## Validation and utilities
 
 ```bash
-# Validate plugin structure (frontmatter, paths, duplicates, executability, tool configs)
+# Validate plugin structure (frontmatter, paths, duplicates, executability,
+# tool configs, and routing-block consistency)
 ./scripts/validate.sh
 ./scripts/validate.sh --strict    # treat warnings as errors
 
@@ -465,7 +495,7 @@ skills-plugin/
 ├── CLAUDE.md                         # contributor guide for this repo
 ├── CHANGELOG.md
 ├── .claude-plugin/
-│   └── plugin.json                   # manifest: name, version, skill paths
+│   └── plugin.json                   # manifest: name, version, skill paths, agent paths
 ├── agents/
 │   ├── language-router.md            # pipeline entry point
 │   ├── context.md
@@ -487,6 +517,7 @@ skills-plugin/
 │   │   ├── debug-report.md
 │   │   ├── refactoring-summary.md
 │   │   └── performance-report.md
+│   ├── severity-mappings.md          # severity levels + language-specific pattern tables
 │   └── tools-config.md               # tool definition schema + enable-tool usage
 ├── skills/
 │   ├── common/
@@ -527,7 +558,7 @@ skills-plugin/
 │   └── hooks/
 │       ├── format-python.sh          # PostToolUse: ruff format + ruff check --fix
 │       └── format-js.sh              # PostToolUse: formatter for JS/TS files
-└── settings.json                     # plugin default settings (JSONC)
+└── settings.json                     # plugin default settings (JSON)
 ```
 
 ---

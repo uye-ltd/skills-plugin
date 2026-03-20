@@ -1,14 +1,15 @@
-// settings.json — uye plugin default settings
-// These settings apply when the plugin is enabled in a project.
-// Uncomment and set values you want to activate.
 {
   "agent": "language-router",
   "outputStyle": "Explanatory",
-  // "language": null,          // Pin language; skips auto-detection in Language Router
   "pipeline": {
-    "skipReview": false,        // Skip Reviewer agent (prototyping only)
-    "skipPlanner": false,       // Skip Planner for small tasks
-    "autoPerformance": false    // Run Performance agent automatically after every PASS
+    "skipReview": false,
+    "skipPlanner": false,
+    "autoPerformance": false,
+    "maxIterations": 3,
+    "maxDebugCycles": 2
   },
-  "tools": []                   // Enable reference skills: ["filebrowser", "traefik", …]
+  "context": {
+    "maxFiles": 20
+  },
+  "tools": []
 }

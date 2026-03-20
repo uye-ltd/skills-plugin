@@ -62,7 +62,7 @@ for sub in "${SUBCATEGORIES[@]}"; do
     mkdir -p "$skill_dir"
     cat > "$skill_dir/SKILL.md" << EOF
 ---
-name: ${LANGUAGE:0:2}-${skill}
+name: ${LANGUAGE}-${skill}
 description: TODO: describe what this skill does and when Claude should invoke it.
 language: $LANGUAGE
 used-by: ${USED_BY[$sub]}

@@ -250,6 +250,46 @@ elif [ "$TOOL_COUNT" -eq 0 ]; then
 fi
 echo ""
 
+# ── 8. Routing block consistency ──────────────────────────────────────────────
+echo "── Routing block consistency ──"
+
+ROUTER_FILE="$PLUGIN_DIR/agents/language-router.md"
+CONTRACT_FILE="$PLUGIN_DIR/docs/contracts/routing-block.md"
+CONTEXT_FILE="$PLUGIN_DIR/agents/context.md"
+
+if [ -f "$ROUTER_FILE" ] && [ -f "$CONTRACT_FILE" ]; then
+  # Check that language-router.md uses underscore field names (not spaces)
+  if grep -qP "^EXECUTOR SKILLS:|^REVIEWER SKILLS:|^COMMON SKILLS:" "$ROUTER_FILE" 2>/dev/null; then
+    error "language-router.md uses space-separated field names (EXECUTOR SKILLS) — must use underscores (EXECUTOR_SKILLS)"
+  else
+    green "language-router.md field names use underscores"
+  fi
+
+  # Check NEXT value matches contract (must be 'context', not 'context-agent')
+  if grep -q "NEXT: context-agent" "$ROUTER_FILE" 2>/dev/null; then
+    error "language-router.md emits 'NEXT: context-agent' but contract requires 'NEXT: context'"
+  else
+    green "language-router.md NEXT value matches contract"
+  fi
+
+  # Check that context.md preconditions reference EXECUTOR_SKILLS (not EXECUTOR SKILLS)
+  if grep -q "EXECUTOR SKILLS" "$CONTEXT_FILE" 2>/dev/null; then
+    error "context.md preconditions reference 'EXECUTOR SKILLS' (space) — must match routing block field name 'EXECUTOR_SKILLS'"
+  else
+    green "context.md precondition field names consistent"
+  fi
+
+  # Check that PIPELINE field is present in router output
+  if ! grep -q "^PIPELINE:" "$ROUTER_FILE" 2>/dev/null; then
+    error "language-router.md routing block is missing the PIPELINE field"
+  else
+    green "language-router.md PIPELINE field present"
+  fi
+else
+  warning "skipping routing block consistency check (language-router.md or routing-block.md not found)"
+fi
+echo ""
+
 # ── Summary ───────────────────────────────────────────────────────────────────
 echo "── Summary ──"
 if [ "$ERRORS" -gt 0 ]; then

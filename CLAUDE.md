@@ -8,20 +8,26 @@ It implements a multi-agent pipeline with language routing for Python, JavaScrip
 The pipeline is a sequence of specialised agents that hand off structured output to each other:
 
 ```
-Language Router → Context → Planner → Executor → Reviewer
-                                                     │
-                                         ┌───────────┼───────────┐
-                                         ▼           ▼           ▼
-                                     Refactorer   Debugger   Performance*
-                                                     │
-                                                     ▼
-                                                 Executor (loop)
+Language Router → Context → Planner → Executor → Reviewer (+ security gate)
+                              │                      │
+                    skipPlanner=true          ┌──────┼──────────┐
+                    (goes direct)             ▼      ▼          ▼
+                                         Refactorer† Debugger‡  Performance*
+                                         (verify-    │           │ FIX_NOW
+                                          tests)     ▼           ▼
+                                                  Executor ← Executor
+                                                  (loop, up to maxIterations)
+                                                      │
+                                               BLOCKED → User
 
-* Performance triggers when:
-  - Reviewer raises ≥ 2 major perf issues, OR
-  - pipeline.autoPerformance: true in settings.json, OR
-  - Planner detects a hot path, OR
-  - User explicitly requests it
+† Refactorer: invoked after PASS if detect-code-smells or analyze-complexity flagged anything.
+  Invokes verify-tests after each step. Skipped (Done) if both skills are clean.
+
+‡ Debugger: guarded by maxDebugCycles. Emits BLOCKED (not a guess) when root cause is unknown.
+
+* Performance: FIX_NOW routes a structured fix request to Executor → Reviewer.
+  MEASURE_FIRST surfaces profiling commands to user without touching code.
+  Auto-triggers: Reviewer ≥ 2 major perf issues; autoPerformance=true; Planner hot path; user request.
 ```
 
 **Key principle**: agents are language-agnostic. Language Router selects the correct
@@ -35,16 +41,19 @@ skill set for Executor and Reviewer. All other agents use common skills only.
 |-----|---------|-------------|
 | `agent` | `"language-router"` | Entry-point agent for all requests |
 | `outputStyle` | `"Explanatory"` | Response verbosity: `Explanatory` \| `Concise` |
-| `language` | `null` | Pin language; skips auto-detection in Language Router |
+| `language` | `null` | Pin language; takes priority over all detection rules |
 | `pipeline.skipReview` | `false` | Skip Reviewer agent (prototyping only) |
-| `pipeline.skipPlanner` | `false` | Skip Planner for small tasks |
+| `pipeline.skipPlanner` | `false` | Skip Planner; Context hands off directly to Executor |
 | `pipeline.autoPerformance` | `false` | Run Performance agent automatically after every PASS |
+| `pipeline.maxIterations` | `3` | Max Executor↔Reviewer round trips before `BLOCKED` |
+| `pipeline.maxDebugCycles` | `2` | Max DEBUG decisions before Reviewer emits `BLOCKED` instead of re-escalating |
+| `context.maxFiles` | `20` | Max files Context agent reads fully; extras are noted but skipped |
 | `tools` | `[]` | Enable reference skills: `["postgres", "redis"]`. Supports version pinning: `[{"name": "redis", "version": "7.2"}]` — overrides `github.branch` for source lookups |
 
 ## Repository layout
 
 ```
-.claude-plugin/plugin.json   — manifest: name, version, skill paths, hooks path
+.claude-plugin/plugin.json   — manifest: name, version, skill paths, agent paths
 agents/                      — one .md file per agent (system prompt + frontmatter)
 skills/
   common/                    — skills used by all agents regardless of language
@@ -61,7 +70,7 @@ skills/
     analysis/                — code-review, check-bugs  (used by Reviewer)
     generation/              — generate-func, …         (used by Executor)
     refactoring/             — extract-func, …          (used by Refactorer)
-    testing/                 — generate-test, …         (used by Executor + Reviewer)
+    testing/                 — generate-test, …         (used by Executor, Reviewer, Refactorer)
     debugging/               — analyze-trace, …         (used by Debugger)
     performance/             — language-specific perf   (used by Performance)
   templates/                 — base templates for parallel skill families
@@ -70,6 +79,7 @@ config/
   tools/                     — one JSON definition per supported external tool
                                (validated by validate.sh: required fields, name matches filename)
 docs/contracts/              — input/output schemas for each agent handoff
+docs/severity-mappings.md    — severity levels + language-specific pattern tables
 docs/tools-config.md         — tool definition schema + enable-tool usage
 hooks/hooks.json             — hook configuration (JSON)
 scripts/                     — install, scaffold, validate, release utilities
@@ -83,13 +93,13 @@ Do not change the section headers in agent outputs — downstream agents parse t
 | Handoff | Contract file |
 |---------|--------------|
 | Language Router → Context | `docs/contracts/routing-block.md` |
-| Context → Planner | `docs/contracts/context-summary.md` |
+| Context → Planner (or Executor if skipPlanner) | `docs/contracts/context-summary.md` |
 | Planner → Executor | `docs/contracts/implementation-plan.md` |
-| Executor → Reviewer | `docs/contracts/execution-summary.md` |
+| Executor → Reviewer (or done if skipReview) | `docs/contracts/execution-summary.md` |
 | Reviewer → next | `docs/contracts/review-report.md` |
-| Debugger → Executor | `docs/contracts/debug-report.md` |
+| Debugger → Executor (or User if BLOCKED) | `docs/contracts/debug-report.md` |
 | Refactorer → done | `docs/contracts/refactoring-summary.md` |
-| Performance → done | `docs/contracts/performance-report.md` |
+| Performance → Executor (FIX_NOW) or User (MEASURE_FIRST) | `docs/contracts/performance-report.md` |
 
 ## Writing skills
 
@@ -135,6 +145,7 @@ Rules:
 - Always document which skills the agent uses in the body
 - Always define the output format the agent produces (matches its contract in `docs/contracts/`)
 - Agents must not overlap in responsibility — each owns exactly one pipeline stage
+- Register new agents in the `agents` array in `.claude-plugin/plugin.json`
 
 Scaffold: `./scripts/new-agent.sh <name>`
 
@@ -206,6 +217,7 @@ See `docs/tools-config.md` for the full schema and all bundled tool definitions.
 #   - each pipeline agent has a matching contract in docs/contracts/
 #   - hook scripts are executable
 #   - config/tools/*.json: valid JSON, required fields present, name matches filename stem
+#   - routing block field names and NEXT value match between language-router.md and contract
 ./scripts/validate.sh
 ./scripts/validate.sh --strict    # treat warnings as errors
 
@@ -242,7 +254,7 @@ When adding a new language, `./scripts/new-language.sh` creates a stub hook scri
 
 ## Conventions
 
-- Skill names: `kebab-case`, prefixed with language code (`py-`, `js-`, `go-`) or unprefixed for common
+- Skill names: `kebab-case`, prefixed with language name (`py-`, `js-`, `go-` for the bundled languages; full name for new ones, e.g. `rust-`, `kotlin-`) or unprefixed for common
 - Agent names: `kebab-case`, role-based (not language-based)
 - Script names: `kebab-case` verbs (`new-skill.sh`, `validate.sh`, `list-skills.sh`)
 - All scripts must start with `set -euo pipefail` and include a usage comment

@@ -1,20 +1,20 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "uye",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Organisation-wide Claude Code plugin \u2014 multi-agent pipeline with language routing for Python, JavaScript, and Go.",
   "owner": {
     "name": "uye",
-    "email": "placeholder@example.com"
+    "email": "org@uye.rocks"
   },
   "plugins": [
     {
       "name": "uye",
       "description": "Multi-agent pipeline with language routing for Python, JavaScript, and Go.",
-      "version": "0.2.1",
+      "version": "0.3.0",
       "author": {
         "name": "uye",
-        "email": "placeholder@example.com"
+        "email": "org@uye.rocks"
       },
       "source": "./",
       "category": "development"

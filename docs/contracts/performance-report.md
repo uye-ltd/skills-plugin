@@ -1,7 +1,7 @@
 # Contract: Performance Report
 
 Produced by: Performance agent
-Consumed by: Executor (if fixes requested), or end of pipeline (human review)
+Consumed by: Executor (on FIX_NOW), or User (on MEASURE_FIRST — profile first, then re-invoke Performance)
 
 ## Fields
 
@@ -11,6 +11,7 @@ Consumed by: Executor (if fixes requested), or end of pipeline (human review)
 | Issues found | yes | table | Prioritised list; use "No issues found" if clean |
 | Baseline metrics | no | prose | Current numbers if profiling was already run |
 | Recommended action | yes | enum: MEASURE_FIRST, FIX_NOW | Whether to profile before changing code |
+| NEXT | yes | enum: executor, user | `executor` on FIX_NOW; `user` on MEASURE_FIRST |
 
 ### Issues table columns
 
@@ -28,12 +29,33 @@ Consumed by: Executor (if fixes requested), or end of pipeline (human review)
 - `MEASURE_FIRST`: issues are suspected but not confirmed — profile before changing code
 - `FIX_NOW`: issue is confirmed and fix is clear (e.g. obvious N+1 in a loop)
 
+## FIX_NOW handoff format
+
+When `Recommended action: FIX_NOW`, append a Performance Fix Request block after the report for the Executor:
+
+```
+## Performance Fix Request
+
+### Context
+<one sentence: what was confirmed and how>
+
+### Fixes to apply (in order)
+1. [file:line] <change> — expected: <measurable improvement>
+2. ...
+
+### Verification
+<benchmark command or test to confirm improvement>
+```
+
+The Executor treats this as an Implementation Plan: minimal change, no scope creep, then Reviewer.
+
 ## Invariants
 
 - Performance agent must not optimise without measurement — always recommend profiling first
 - Every suggested fix must include a way to verify improvement
 - Correctness is non-negotiable: a faster but incorrect solution is not acceptable
 - `FIX_NOW` is only appropriate for confirmed, obvious issues (e.g. O(n²) loop with a clear O(n) alternative)
+- `MEASURE_FIRST` reports must not include a Fix Request block — do not route to Executor until profiling confirms the issue
 
 ## Example
 

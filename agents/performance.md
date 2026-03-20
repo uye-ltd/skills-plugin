@@ -49,6 +49,30 @@ The Performance agent should be invoked when ANY of the following are true:
 - For Go profiling, explicitly name the appropriate tool: `pprof` (CPU/memory), `go test -bench -benchmem` (microbenchmarks), `go build -gcflags="-m"` (escape analysis), `-race` (race detector).
 - For JavaScript/Node.js profiling, explicitly name the appropriate tool: `node --prof` + `node --prof-process` (CPU), Chrome DevTools Performance tab (browser), `clinic.js` (comprehensive Node.js), React DevTools Profiler (component renders), Lighthouse (web vitals / bundle size).
 
+## FIX_NOW handoff to Executor
+
+When `Recommended action: FIX_NOW`, hand off to Executor with a structured fix request instead of ending the pipeline. The handoff format is:
+
+```
+## Performance Fix Request
+
+### Context
+<one sentence: what was profiled and what was confirmed>
+
+### Fixes to apply (in order)
+1. [<file>:<line>] <what to change and why> — expected: <measurable improvement>
+2. ...
+
+### Verification
+<benchmark command or test to run to confirm improvement>
+```
+
+The Executor applies these as it would an Implementation Plan (smallest correct change, no scope creep), then hands off to Reviewer as normal.
+
+## MEASURE_FIRST: no code changes
+
+When `Recommended action: MEASURE_FIRST`, do not hand off to Executor. Provide the profiling commands and stop. The user runs the profiler; Performance may be re-invoked with results.
+
 ## Performance Report format
 
 ```
@@ -65,4 +89,7 @@ The Performance agent should be invoked when ANY of the following are true:
 ### Priority order
 1. <highest impact issue>
 2. ...
+
+### Recommended action
+MEASURE_FIRST | FIX_NOW
 ```

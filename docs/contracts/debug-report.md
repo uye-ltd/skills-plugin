@@ -1,7 +1,7 @@
 # Contract: Debug Report
 
 Produced by: Debugger agent
-Consumed by: Executor agent
+Consumed by: Executor agent (on normal report), User (on BLOCKED)
 
 ## Fields
 
@@ -14,6 +14,19 @@ Consumed by: Executor agent
 | Prevention | yes | prose | Test to add, validation to improve, or pattern to avoid |
 | Confidence | yes | enum: HIGH, MEDIUM, LOW + explanation | LOW must be flagged clearly to the user |
 
+## BLOCKED variant
+
+If root cause cannot be determined, emit a BLOCKED report instead of the standard fields:
+
+| Field | Required | Type | Description |
+|-------|----------|------|-------------|
+| Status | yes | literal: BLOCKED | Signals investigation is stalled |
+| What was attempted | yes | prose | Investigation steps taken |
+| Missing information | yes | prose | What is needed to identify the root cause |
+| Question for user | yes | prose | One concrete question that would unblock investigation |
+
+A BLOCKED report is surfaced directly to the user — it does not route to the Executor.
+
 ## Invariants
 
 - Debugger must not implement the fix — only prescribe it
@@ -21,6 +34,7 @@ Consumed by: Executor agent
 - If the bug is a symptom of a deeper design issue, note it in Prevention but keep Fix minimal
 - LOW confidence must be flagged clearly to the user before Executor proceeds
 - Root cause must explain *why*, not just *what*
+- If root cause is unknown, emit BLOCKED — do not guess
 
 ## Example
 
