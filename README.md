@@ -395,6 +395,98 @@ claude --plugin-dir /path/to/skills-plugin
 
 ---
 
+## Tuning the pipeline
+
+After installing into a repo, create or edit `.claude/settings.json` in that repo to override plugin defaults. The file is already created by `install.sh` — add a `"uye"` key under `"plugins"`:
+
+```json
+{
+  "plugins": {
+    "uye": {
+      "outputStyle": "Concise",
+      "language": "go",
+      "pipeline": {
+        "skipPlanner": true,
+        "maxIterations": 5
+      },
+      "tools": ["postgres", "redis"]
+    }
+  }
+}
+```
+
+### Common scenarios
+
+**Speed up iteration during development** — skip the Planner for small tasks and cut review loops:
+```json
+"uye": {
+  "pipeline": { "skipPlanner": true, "maxIterations": 2 }
+}
+```
+
+**Prototyping / spike work** — skip the Reviewer entirely:
+```json
+"uye": {
+  "pipeline": { "skipReview": true }
+}
+```
+
+**Mixed-language repo with a dominant language** — pin so the Router never misdetects:
+```json
+"uye": { "language": "python" }
+```
+
+**Always check performance after every review pass:**
+```json
+"uye": {
+  "pipeline": { "autoPerformance": true }
+}
+```
+
+**Terse output** — less explanation, more code:
+```json
+"uye": { "outputStyle": "Concise" }
+```
+
+**Enable reference skills for the tools your project uses:**
+```json
+"uye": {
+  "tools": ["postgres", "redis", "docker", "github-actions"]
+}
+```
+
+Version-pin a tool to get source lookups against a specific tag:
+```json
+"uye": {
+  "tools": [{"name": "redis", "version": "7.2"}, "postgres"]
+}
+```
+
+**Large monorepo** — allow Context to read more files before skipping:
+```json
+"uye": {
+  "context": { "maxFiles": 40 }
+}
+```
+
+### Parameter reference
+
+| Key | Default | What to change it to |
+|-----|---------|----------------------|
+| `outputStyle` | `"Explanatory"` | `"Concise"` for less prose |
+| `language` | `null` | `"python"` / `"javascript"` / `"go"` to pin detection |
+| `pipeline.skipPlanner` | `false` | `true` for small edits or well-understood tasks |
+| `pipeline.skipReview` | `false` | `true` for throwaway / spike code |
+| `pipeline.autoPerformance` | `false` | `true` to always run Performance after a PASS |
+| `pipeline.maxIterations` | `3` | Raise for stubborn reviews; lower to fail fast |
+| `pipeline.maxDebugCycles` | `2` | Raise if Debugger needs more passes on hard bugs |
+| `context.maxFiles` | `20` | Raise for large monorepos; lower to save tokens |
+| `tools` | `[]` | List tool names (or `{"name","version"}` objects) to activate reference skills |
+
+Commit the file to share settings with your team. Settings in a project's `.claude/settings.json` always override the plugin's own `settings.json`.
+
+---
+
 ## Adding new components
 
 ### New tool (reference skill family)

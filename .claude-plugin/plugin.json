@@ -1,6 +1,6 @@
 {
   "name": "uye",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Organisation-wide Claude Code plugin \u2014 multi-agent pipeline with language routing for Python, JavaScript, and Go.",
   "author": {
     "name": "uye",

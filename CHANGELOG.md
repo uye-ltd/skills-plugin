@@ -1,7 +1,32 @@
+## [0.3.1] - 2026-03-21
+
+### Added
+- TODO: list new skills, agents, or features
+
+### Changed
+- TODO: list modified behaviour
+
+### Fixed
+- TODO: list bug fixes
+
+### Commits since 
+- 2841423 feat: major update v0.3.0
+- 80b9f67 feat: reference skills major update
+- ed53820 feat: v0.2.1
+- eb6bae8 feat: reference skills
+- 4a5d0b6 refactor: major refactor
+- 5d33ba8 refactor: major refactor
+- bb3fff5 refactor: major refactor
+- b73ea4e feat: common skills and agents clenup
+- 52a840a feat: styleguide for python, go, js
+- e7ca22a feat: initial structure
+- 4a42a34 Initial commit
+
 ## [0.3.0] - 2026-03-20
 
 ### Added
 - `pipeline.maxIterations` setting (default: `3`) — Executor↔Reviewer loop now has an explicit upper bound; Reviewer emits `BLOCKED` when limit is reached and surfaces all unresolved issues directly to the user
+
 - `pipeline.maxDebugCycles` setting (default: `2`) — Reviewer tracks how many times it has issued `DEBUG` and emits `BLOCKED` instead of re-escalating when the limit is hit, preventing infinite debug loops
 - `context.maxFiles` setting (default: `20`) — Context agent now respects a file-read limit; files over the limit are listed in a `Files noted but not read` section rather than silently omitted
 - `BLOCKED` output state for Reviewer (max iterations or max debug cycles exceeded) and Debugger (root cause cannot be determined) — both surface a structured report to the user instead of looping or guessing
