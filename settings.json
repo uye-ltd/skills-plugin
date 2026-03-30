@@ -6,10 +6,15 @@
     "skipPlanner": false,
     "autoPerformance": false,
     "maxIterations": 3,
-    "maxDebugCycles": 2
+    "maxDebugCycles": 2,
+    "disableAgents": []
   },
   "context": {
     "maxFiles": 20
   },
-  "tools": []
+  "tools": [],
+  "skills": {
+    "exclude": [],
+    "include": []
+  }
 }

@@ -1,0 +1,29 @@
+{
+  "name": "streamrip",
+  "description": "Scriptable music downloader for Qobuz, Tidal, Deezer, and SoundCloud — CLI downloads, search, metadata tagging, and playlist/album handling",
+  "docs": {
+    "url": "https://github.com/nathom/streamrip",
+    "sections": [
+      "wiki",
+      "README.md"
+    ]
+  },
+  "github": {
+    "org": "nathom",
+    "repo": "streamrip",
+    "branch": "main"
+  },
+  "config": {
+    "paths": ["config.toml"]
+  },
+  "aliases": ["rip"],
+  "examples": [
+    "download album",
+    "search qobuz",
+    "tidal track",
+    "soundcloud playlist",
+    "deezer",
+    "tags",
+    "config.toml setup"
+  ]
+}

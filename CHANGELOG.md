@@ -1,32 +1,22 @@
+## [0.3.2] - 2026-03-30
+
+### Changed
+- Collapsed the 8-line `## Skill filter` block in all 7 non-router agents into a single line — identical rule logic, no behaviour change
+- Consolidated `## Python guidance`, `## JavaScript guidance`, `## Go guidance` sections in `executor.md` into one shared "Execution principles" block + compact per-language constraints; style rules that were already covered by generation skills removed
+- Removed 6 decision-rule bullets from `reviewer.md` that duplicated the rule table in `docs/contracts/review-report.md` (already referenced by agents)
+- Added `skills/templates/generate-func.md` shared base template; `py-generate-func`, `js-generate-func`, and `go-generate-func` now declare `template: generate-func` and carry only language-specific content
+
 ## [0.3.1] - 2026-03-21
 
 ### Added
-- TODO: list new skills, agents, or features
-
-### Changed
-- TODO: list modified behaviour
-
-### Fixed
-- TODO: list bug fixes
-
-### Commits since 
-- 2841423 feat: major update v0.3.0
-- 80b9f67 feat: reference skills major update
-- ed53820 feat: v0.2.1
-- eb6bae8 feat: reference skills
-- 4a5d0b6 refactor: major refactor
-- 5d33ba8 refactor: major refactor
-- bb3fff5 refactor: major refactor
-- b73ea4e feat: common skills and agents clenup
-- 52a840a feat: styleguide for python, go, js
-- e7ca22a feat: initial structure
-- 4a42a34 Initial commit
+- added configs for broad set of tools for `reference` skills
+- include/exclude settings for agents and skills
+- plugin validator tests extended
 
 ## [0.3.0] - 2026-03-20
 
 ### Added
 - `pipeline.maxIterations` setting (default: `3`) — Executor↔Reviewer loop now has an explicit upper bound; Reviewer emits `BLOCKED` when limit is reached and surfaces all unresolved issues directly to the user
-
 - `pipeline.maxDebugCycles` setting (default: `2`) — Reviewer tracks how many times it has issued `DEBUG` and emits `BLOCKED` instead of re-escalating when the limit is hit, preventing infinite debug loops
 - `context.maxFiles` setting (default: `20`) — Context agent now respects a file-read limit; files over the limit are listed in a `Files noted but not read` section rather than silently omitted
 - `BLOCKED` output state for Reviewer (max iterations or max debug cycles exceeded) and Debugger (root cause cannot be determined) — both surface a structured report to the user instead of looping or guessing
@@ -77,35 +67,14 @@
 - `docs/contracts/performance-report.md` was the only contract without a `NEXT` field; routing from the Performance agent was implicit rather than declared
 - Placeholder email `placeholder@example.com` in `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`; replaced with `org@uye.rocks`
 
-### Commits since v0.2.1
-- 80b9f67 feat: reference skills major update
-- ed53820 feat: v0.2.1
-- eb6bae8 feat: reference skills
-- 4a5d0b6 refactor: major refactor
-- 5d33ba8 refactor: major refactor
-- bb3fff5 refactor: major refactor
-- b73ea4e feat: common skills and agents clenup
-- 52a840a feat: styleguide for python, go, js
-- e7ca22a feat: initial structure
-- 4a42a34 Initial commit
-
 ## [0.2.1] - 2026-03-20
 
 ### Added
-- Reference skills family: `reference-docs`, `reference-help`, `reference-sourcecode`, `reference-api`, `reference-changelog`, `reference-config`, `reference-examples`, `reference-list` — all eight load tool definitions from `config/tools/` at runtime
-- `config/tools/` directory with JSON tool definitions (postgres, redis, and others); validated by `validate.sh`
-- `skills/templates/reference-base.md` — shared preamble for all eight reference skills covering tool resolution, version pinning, and alias matching
-- `tools` setting in `settings.json` — enables reference skills per-project with optional version pinning (e.g. `[{"name": "redis", "version": "7.2"}]`)
+- Configurable skills for docs reference
+- Reference configs for `caddy`, `fail2ban`, `filebrowser`, `navidrome`
 
-### Commits since v0.2.0
+### Commits since 
 - eb6bae8 feat: reference skills
-- 4a5d0b6 refactor: major refactor
-- 5d33ba8 refactor: major refactor
-- bb3fff5 refactor: major refactor
-- b73ea4e feat: common skills and agents clenup
-- 52a840a feat: styleguide for python, go, js
-- e7ca22a feat: initial structure
-- 4a42a34 Initial commit
 
 ## [0.2.0] - 2026-03-18
 
@@ -120,15 +89,6 @@
 - e7ca22a feat: initial structure
 - 4a42a34 Initial commit
 
-# Changelog
-
-All notable changes to this plugin will be documented here.
-Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
-
-Versioning follows [Semantic Versioning](https://semver.org/).
-
-## [Unreleased]
-
 ## [0.1.0] - 2026-03-14
 
 ### Added
@@ -142,3 +102,10 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 - Hook configuration template with all 14 events commented out
 - Install script for deploying to org repos at project scope
 - Scaffold scripts for new skills and agents
+
+# Changelog
+
+All notable changes to this plugin will be documented here.
+Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+
+Versioning follows [Semantic Versioning](https://semver.org/).

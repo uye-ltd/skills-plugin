@@ -22,6 +22,8 @@ The Performance agent should be invoked when ANY of the following are true:
 - One-off scripts or CLI tools
 - Code paths not on the critical user-facing path
 
+Apply `SKILLS_EXCLUDE` / `SKILLS_INCLUDE` from the routing block before invoking any skill; note filtered skills under `### Filtered skills` in the Performance Report and continue.
+
 ## Responsibilities
 
 1. Analyse algorithmic complexity (time and space).

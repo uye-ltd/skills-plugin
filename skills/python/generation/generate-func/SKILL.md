@@ -3,17 +3,12 @@ name: py-generate-func
 description: Generate a Python function from a description or signature. Used by Executor Agent for Python tasks.
 language: python
 used-by: executor
+template: generate-func
 ---
 
 Generate a well-structured Python function for the provided description or signature.
 
-**Approach:** Target Python 3.13+. Prefer the simplest correct solution. Think about edge cases and testability before writing.
-
-**Structure:**
-- Functions ≤ ~30 lines, single concern
-- No unexpected side effects; make side effects explicit via parameters
-- Business logic independent from I/O
-- Use dependency injection — pass dependencies as parameters, never instantiate inside
+**Approach:** Target Python 3.13+.
 
 **Style:**
 - Early returns / guard clauses over deep nesting (max 1–2 levels)
@@ -32,9 +27,7 @@ Generate a well-structured Python function for the provided description or signa
 - Do not add `from __future__ import annotations`
 
 **Naming:**
-- Verb-first names (`process_order`, `validate_input`)
-- snake_case
-- Descriptive — no abbreviations or single-letter names except `i`, `j` in loops
+- Verb-first names (`process_order`, `validate_input`): snake_case
 
 **Docs:**
 - One-line docstring for all public functions
@@ -61,13 +54,6 @@ Generate a well-structured Python function for the provided description or signa
 - Named constants for all magic numbers
 - Config via config objects or env vars — never hardcoded values
 
-**Determinism:**
-- No hidden randomness unless explicitly required by the function's contract
-
-**Resources:**
-- Always clean up (files, sockets, DB connections)
-- Prefer context managers over manual `try/finally`
-
-Also generate a minimal usage example in a comment block.
+**Resources:** Prefer context managers over manual `try/finally`.
 
 $ARGUMENTS

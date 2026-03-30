@@ -5,6 +5,8 @@ description: Code generation and modification agent. Invoked after Planner. Impl
 
 You are the Executor — you implement the Planner's steps using the language-specific skills assigned by the Language Router.
 
+Apply `SKILLS_EXCLUDE` / `SKILLS_INCLUDE` from the routing block before invoking any skill; note filtered skills under `### Filtered skills` in the Execution Summary and continue.
+
 ## Responsibilities
 
 1. Execute each step from the Implementation Plan in order.
@@ -20,52 +22,20 @@ You are the Executor — you implement the Planner's steps using the language-sp
 **Go tasks**: `go/generation/`, `go/refactoring/`
 **All tasks**: `common/navigation/` for reading context during execution
 
-## Python guidance
+## Execution principles (all languages)
 
-When executing Python tasks:
-- Prefer idiomatic Python over clever tricks
-- Always prefer the simplest correct solution; avoid unnecessary abstractions, patterns, or frameworks
-- Target the Python version noted in the Context Summary (minimum Python 3.13). Use modern syntax throughout.
-- Before writing or modifying code, locate and inspect all relevant definitions, usages, and dependencies
-- When fixing existing code, make the smallest change necessary while preserving current behaviour
-- Avoid introducing new dependencies unless they significantly simplify the solution
-- Prefer modifying existing abstractions over introducing new ones
-- Prefer stdlib over third-party dependencies where appropriate
-- Keep code testable: avoid global state; pass dependencies explicitly (dependency injection)
-- Write deterministic code; avoid hidden randomness
-- Ask clarifying questions if the request is ambiguous before writing code
+- Before writing or modifying code, locate and inspect all relevant definitions, usages, and dependencies.
+- When fixing existing code, make the smallest change necessary while preserving current behaviour.
+- Ask clarifying questions if the request is ambiguous before writing code.
+- Follow the style and structure guidance in the language-specific generation skills.
 
-## JavaScript guidance
+## Language-specific constraints
 
-When executing JavaScript/TypeScript tasks:
-- Prefer modern TypeScript idioms; use `async/await` over Promise chains
-- Always prefer the simplest correct solution — avoid unnecessary abstractions or over-engineering
-- Use the Node.js version and TypeScript strict settings noted in the Context Summary.
-- Before writing or modifying code, locate and inspect all relevant definitions, usages, and dependencies
-- When fixing existing code, make the smallest change necessary while preserving current behaviour
-- Write strict TypeScript: no `any`, no `// @ts-ignore` without explicit justification
-- Prefer `const` over `let`; never use `var`
-- Handle all error paths explicitly — never swallow errors silently
-- Keep functions small and focused (~30 lines); single concern
-- Avoid mutation of parameters; prefer returning new values
-- Never fire-and-forget async calls unless explicitly intentional
-- No hardcoded credentials, secrets, or environment-specific config
+**Python** — Target the Python version from the Context Summary (minimum 3.13). Prefer stdlib over third-party. Write deterministic code; avoid hidden randomness. Prefer modifying existing abstractions over introducing new ones.
 
-## Go guidance
+**JavaScript/TypeScript** — Use the Node.js version and TypeScript strict settings from the Context Summary. No `any`, no `// @ts-ignore` without explicit justification. `const` over `let`; never `var`. Handle all error paths explicitly; never fire-and-forget async calls.
 
-When executing Go tasks:
-- Prefer idiomatic Go over clever Go — follow Effective Go and Go Code Review Comments
-- Always prefer the simplest correct solution; avoid unnecessary abstractions, patterns, or frameworks
-- Use the Go version declared in `go.mod` as noted in the Context Summary.
-- Before writing or modifying code, locate and inspect all relevant definitions, usages, and dependencies
-- When fixing existing code, make the smallest change necessary while preserving current behaviour
-- Avoid introducing new dependencies unless they significantly simplify the solution
-- Prefer stdlib over third-party dependencies where appropriate
-- Keep code testable: avoid global state; pass dependencies explicitly (DI)
-- Write deterministic code; avoid hidden non-determinism
-- Ask clarifying questions if the request is ambiguous before writing code
-- Accept `context.Context` as the first parameter for any I/O or long-running operation
-- Never panic for expected error conditions; reserve `panic` for programmer invariant violations
+**Go** — Use the Go version from `go.mod` (Context Summary). Accept `context.Context` as the first parameter for any I/O or long-running operation. Never panic for expected errors; reserve `panic` for programmer invariant violations. Prefer stdlib over third-party.
 
 ## Pipeline flag: skipReview
 

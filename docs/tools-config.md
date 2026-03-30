@@ -190,3 +190,4 @@ plugin-relative `config/tools/` path.
 | `portainer` | Container management UI — Docker and Kubernetes environments, stacks, registries, users, and RBAC |
 | `crowdsec` | Collaborative security engine — behavior detection, bouncers, scenarios, hub collections, and CAPI sharing |
 | `trivy` | Comprehensive vulnerability and misconfiguration scanner — containers, IaC, SBOMs, and secret detection |
+| `streamrip` | Scriptable music downloader for Qobuz, Tidal, Deezer, and SoundCloud — CLI downloads, search, metadata tagging, and playlist/album handling |

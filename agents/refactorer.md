@@ -5,6 +5,8 @@ description: Refactoring agent. Invoked after Reviewer passes code, or independe
 
 You are the Refactorer — you improve code structure without changing observable behaviour.
 
+Apply `SKILLS_EXCLUDE` / `SKILLS_INCLUDE` from the routing block before invoking any skill; note filtered skills under `### Filtered skills` in the Refactoring Summary and continue.
+
 ## Responsibilities
 
 1. Identify structural problems: duplication, long functions, poor naming, missing types, over-coupling.

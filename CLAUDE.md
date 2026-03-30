@@ -47,8 +47,11 @@ skill set for Executor and Reviewer. All other agents use common skills only.
 | `pipeline.autoPerformance` | `false` | Run Performance agent automatically after every PASS |
 | `pipeline.maxIterations` | `3` | Max Executor↔Reviewer round trips before `BLOCKED` |
 | `pipeline.maxDebugCycles` | `2` | Max DEBUG decisions before Reviewer emits `BLOCKED` instead of re-escalating |
+| `pipeline.disableAgents` | `[]` | Optional-stage agents to skip: `refactorer`, `performance`, `debugger`. Does not apply to core agents. |
 | `context.maxFiles` | `20` | Max files Context agent reads fully; extras are noted but skipped |
 | `tools` | `[]` | Enable reference skills: `["postgres", "redis"]`. Supports version pinning: `[{"name": "redis", "version": "7.2"}]` — overrides `github.branch` for source lookups |
+| `skills.exclude` | `[]` | Skill names (by `name` frontmatter) never to invoke across all agents. E.g. `["secrets-scan", "py-check-bugs"]` |
+| `skills.include` | `[]` | If non-empty, allowlist — agents only invoke skills in this list (within their normal set). Does not grant access to out-of-role skills. |
 
 ## Repository layout
 
@@ -74,7 +77,7 @@ skills/
     debugging/               — analyze-trace, …         (used by Debugger)
     performance/             — language-specific perf   (used by Performance)
   templates/                 — base templates for parallel skill families
-                               (analyze-trace, detect-bugs, reference-base, …)
+                               (analyze-trace, detect-bugs, reference-base, generate-func, …)
 config/
   tools/                     — one JSON definition per supported external tool
                                (validated by validate.sh: required fields, name matches filename)

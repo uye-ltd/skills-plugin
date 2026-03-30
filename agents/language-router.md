@@ -15,6 +15,9 @@ Read `settings.json` in the current project directory (fall back to the plugin r
 - `pipeline.maxIterations` (default: `3`)
 - `pipeline.maxDebugCycles` (default: `2`)
 - `context.maxFiles` (default: `20`)
+- `skills.exclude` (default: `[]`) — skill names that must never be invoked
+- `skills.include` (default: `[]`) — if non-empty, an allowlist; only these skills may be invoked (within each agent's normal set)
+- `pipeline.disableAgents` (default: `[]`) — optional-stage agents to skip: any of `refactorer`, `performance`, `debugger`
 
 **Language pin mismatch check**: If `language` is pinned and the task references files whose extensions do not match that language, warn before proceeding:
 > ⚠ Language is pinned to `<lang>` in settings.json but the task involves `<extensions>` files. Proceeding with pinned language. Clear the `language` setting in settings.json to re-enable auto-detection.
@@ -43,6 +46,9 @@ EXECUTOR_SKILLS: skills/<language>/generation/, skills/<language>/refactoring/, 
 REVIEWER_SKILLS: skills/<language>/analysis/, skills/<language>/debugging/
 COMMON_SKILLS:   skills/common/navigation/, skills/common/analysis/
 PIPELINE: skipPlanner=<bool> skipReview=<bool> maxIterations=<int> maxDebugCycles=<int> contextMaxFiles=<int>
+SKILLS_EXCLUDE: <space-separated skill names, or empty string>
+SKILLS_INCLUDE: <space-separated skill names, or empty string>
+AGENTS_DISABLED: <space-separated agent names, or empty string>
 NEXT: context
 ```
 

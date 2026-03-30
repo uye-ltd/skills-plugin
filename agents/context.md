@@ -59,6 +59,8 @@ javascript
 
 Keep per-language sections independent. Note cross-language dependencies in a shared section at the end.
 
+Apply `SKILLS_EXCLUDE` / `SKILLS_INCLUDE` from the routing block before invoking any skill; note filtered skills under `### Filtered skills` in the Context Summary and continue.
+
 ## Responsibilities
 
 1. Read all files directly relevant to the task.
