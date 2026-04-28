@@ -102,7 +102,7 @@ Entry point for every code task. Reads `settings.json`, detects language, and ro
 
 | Priority | Signal | Example |
 |----------|--------|---------|
-| 1 | `settings.json` `language` pin | `"language": "go"` in settings |
+| 1 | `settings.json` `lang` pin | `"lang": "go"` in settings |
 | 2 | Explicit instruction | "fix this Go code", "in TypeScript" |
 | 3 | File extension | `.py` → Python · `.ts`/`.js` → JS · `.go` → Go |
 | 4 | Project markers | `pyproject.toml` · `go.mod` · `package.json` |
@@ -284,7 +284,7 @@ Skills are invoked as `/uye:<skill-name>` or automatically by the pipeline agent
 |-----|---------|-------------|
 | `agent` | `"language-router"` | Entry-point agent for all requests |
 | `outputStyle` | `"Explanatory"` | Response verbosity: `Explanatory` \| `Concise` |
-| `language` | `null` | Pin language; takes priority over all detection rules |
+| `lang` | `null` | Pin programming language; takes priority over all detection rules |
 | `pipeline.skipReview` | `false` | Skip Reviewer agent (prototyping only) |
 | `pipeline.skipPlanner` | `false` | Skip Planner; Context hands off directly to Executor |
 | `pipeline.autoPerformance` | `false` | Run Performance agent automatically after every PASS |
@@ -404,7 +404,7 @@ After installing into a repo, create or edit `.claude/settings.json` in that rep
   "plugins": {
     "uye": {
       "outputStyle": "Concise",
-      "language": "go",
+      "lang": "go",
       "pipeline": {
         "skipPlanner": true,
         "maxIterations": 5
@@ -433,7 +433,7 @@ After installing into a repo, create or edit `.claude/settings.json` in that rep
 
 **Mixed-language repo with a dominant language** — pin so the Router never misdetects:
 ```json
-"uye": { "language": "python" }
+"uye": { "lang": "python" }
 ```
 
 **Always check performance after every review pass:**
@@ -474,7 +474,7 @@ Version-pin a tool to get source lookups against a specific tag:
 | Key | Default | What to change it to |
 |-----|---------|----------------------|
 | `outputStyle` | `"Explanatory"` | `"Concise"` for less prose |
-| `language` | `null` | `"python"` / `"javascript"` / `"go"` to pin detection |
+| `lang` | `null` | `"python"` / `"javascript"` / `"go"` to pin detection |
 | `pipeline.skipPlanner` | `false` | `true` for small edits or well-understood tasks |
 | `pipeline.skipReview` | `false` | `true` for throwaway / spike code |
 | `pipeline.autoPerformance` | `false` | `true` to always run Performance after a PASS |

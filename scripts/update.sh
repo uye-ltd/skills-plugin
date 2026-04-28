@@ -59,6 +59,16 @@ echo "Updating uye plugin v$PLUGIN_VERSION across ${#REPOS[@]} repo(s)..."
 echo "Plugin: $PLUGIN_DIR"
 echo ""
 
+# Sync statusline script to ~/.claude/ (settings.json already configured from first install)
+STATUSLINE_SRC="$PLUGIN_DIR/scripts/statusline-command.sh"
+STATUSLINE_DEST="$HOME/.claude/statusline-command.sh"
+if [ -f "$STATUSLINE_DEST" ]; then
+  cp "$STATUSLINE_SRC" "$STATUSLINE_DEST"
+  chmod +x "$STATUSLINE_DEST"
+  echo "Statusline script updated at $STATUSLINE_DEST"
+  echo ""
+fi
+
 SUCCESS=0
 FAILED=0
 

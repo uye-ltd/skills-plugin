@@ -1,6 +1,7 @@
 {
   "agent": "language-router",
   "outputStyle": "Explanatory",
+  "lang": null,
   "pipeline": {
     "skipReview": false,
     "skipPlanner": false,

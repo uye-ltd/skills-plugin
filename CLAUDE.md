@@ -41,7 +41,7 @@ skill set for Executor and Reviewer. All other agents use common skills only.
 |-----|---------|-------------|
 | `agent` | `"language-router"` | Entry-point agent for all requests |
 | `outputStyle` | `"Explanatory"` | Response verbosity: `Explanatory` \| `Concise` |
-| `language` | `null` | Pin language; takes priority over all detection rules |
+| `lang` | `null` | Pin programming language; takes priority over all detection rules |
 | `pipeline.skipReview` | `false` | Skip Reviewer agent (prototyping only) |
 | `pipeline.skipPlanner` | `false` | Skip Planner; Context hands off directly to Executor |
 | `pipeline.autoPerformance` | `false` | Run Performance agent automatically after every PASS |
@@ -246,6 +246,37 @@ and must be executable. Two hooks are active:
 - **JavaScript** (`format-js.sh`): runs after any Write or Edit to a `.js`/`.ts`/`.jsx`/`.tsx` file
 
 When adding a new language, `./scripts/new-language.sh` creates a stub hook script at `scripts/hooks/format-<language>.sh` automatically.
+
+## Statusline
+
+`scripts/statusline-command.sh` is installed to `~/.claude/statusline-command.sh` by `install.sh` and wired into `~/.claude/settings.json` as a `type: command` statusline. `update.sh` syncs the script on each run.
+
+The statusline reads Claude's JSON status from stdin and outputs:
+
+```
+~/Dev/uye/skills-plugin  main*  sonnet4.6  @executor  23%/88%/43%  12k/$0.45  9:40pm/May 1 2:59am
+│                         │      │           │           │            │           │
+bold cyan                 green  magenta     orange      pct colors   tok/cost    grey
+```
+
+Fields shown (each omitted independently if data is absent):
+
+| Field | Color | Source |
+|-------|-------|--------|
+| Directory (tilde-prefixed) | bold cyan | `.workspace.current_dir` |
+| Git branch + `*` dirty flag | green / yellow `*` | `git symbolic-ref` |
+| Model (shortened: `sonnet4.6`) | magenta | `.model.id` |
+| Agent name (`@name`) | orange | `.agent.name` (absent unless `--agent` is set) |
+| Context / 5-hour / 7-day usage % | green→yellow→orange→red | `.context_window`, `.rate_limits` |
+| Total tokens / session cost | green→yellow→orange→red | `.context_window`, `.cost` |
+| Rate-limit reset times: `H:MMam/DD-MMT H:MMam` | grey | `.rate_limits.*.resets_at` (Unix epoch) |
+
+**Color thresholds:**
+- Percentages: `< 40%` green · `40–74%` yellow · `75–94%` orange · `≥ 95%` red
+- Tokens: `≤ 50k` green · `50–100k` yellow · `100–200k` orange · `> 200k` red
+- Cost: `≤ $5` green · `$5–$10` yellow · `$10–$20` orange · `> $20` red
+
+Orange uses the 256-color escape `\033[38;5;208m` and degrades gracefully on 8-color terminals.
 
 ## Releasing
 

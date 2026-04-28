@@ -9,7 +9,7 @@ You are the Language Router — the first agent in the pipeline for every code t
 
 Read `settings.json` in the current project directory (fall back to the plugin root if no project-level file exists). Record these values for the routing block:
 
-- `language` — if set to a non-null value, use it directly and skip detection rules 2–5.
+- `lang` — if set to a non-null value, use it directly and skip detection rules 2–5.
 - `pipeline.skipPlanner` (default: `false`)
 - `pipeline.skipReview` (default: `false`)
 - `pipeline.maxIterations` (default: `3`)
@@ -19,14 +19,14 @@ Read `settings.json` in the current project directory (fall back to the plugin r
 - `skills.include` (default: `[]`) — if non-empty, an allowlist; only these skills may be invoked (within each agent's normal set)
 - `pipeline.disableAgents` (default: `[]`) — optional-stage agents to skip: any of `refactorer`, `performance`, `debugger`
 
-**Language pin mismatch check**: If `language` is pinned and the task references files whose extensions do not match that language, warn before proceeding:
-> ⚠ Language is pinned to `<lang>` in settings.json but the task involves `<extensions>` files. Proceeding with pinned language. Clear the `language` setting in settings.json to re-enable auto-detection.
+**Language pin mismatch check**: If `lang` is pinned and the task references files whose extensions do not match that language, warn before proceeding:
+> ⚠ Language is pinned to `<lang>` in settings.json but the task involves `<extensions>` files. Proceeding with pinned language. Clear the `lang` setting in settings.json to re-enable auto-detection.
 
 This is a warning only — do not block. Some tasks intentionally touch cross-language files.
 
 ## Detection rules (in priority order)
 
-1. **Pinned language** — `settings.json` `language` field is set to a non-null value → use that value; skip rules 2–5.
+1. **Pinned language** — `settings.json` `lang` field is set to a non-null value → use that value; skip rules 2–5.
 2. **Explicit instruction** — user says "in Python", "fix this Go code", "TypeScript only" → use that language.
 3. **File extension**:
    - `.py`, `.pyi`, `.pyw` → Python

@@ -1,17 +1,50 @@
-## [0.3.2] - 2026-03-30
+## [0.3.2] - 2026-04-28
+
+### Added
+- TODO: list new skills, agents, or features
+
+### Changed
+- TODO: list modified behaviour
+
+### Fixed
+- TODO: list bug fixes
+
+### Commits since 
+- f836480 release: v0.3.1
+- ee6faca feat: hooks for docs autoupdate v0.3.1
+- 2841423 feat: major update v0.3.0
+- 80b9f67 feat: reference skills major update
+- ed53820 feat: v0.2.1
+- eb6bae8 feat: reference skills
+- 4a5d0b6 refactor: major refactor
+- 5d33ba8 refactor: major refactor
+- bb3fff5 refactor: major refactor
+- b73ea4e feat: common skills and agents clenup
+- 52a840a feat: styleguide for python, go, js
+- e7ca22a feat: initial structure
+- 4a42a34 Initial commit
+
+## [Unreleased]
+
+### Added
+- statusline script (`scripts/statusline-command.sh`) bundled into the plugin; `install.sh` now copies it to `~/.claude/statusline-command.sh` and wires `statusLine` into `~/.claude/settings.json`; `update.sh` syncs it on each run
+
+- statusline formatted as colored `~/Dev/uye/skills-plugin main* sonnet4.6 63%/21%/50% 87k/$3.72 3:10am/01-05T3:00am`
+- `install.sh` now injects all plugin defaults into the target project's `.claude/settings.json` after installation — every configurable key (`agent`, `outputStyle`, `language`, `pipeline.*`, `context.maxFiles`, `tools`, `skills.*`) is pre-filled so users can edit or delete as needed; re-running install is safe (existing project values win on collision); `tools` is populated with all tool names from `config/tools/` and `skills.include` with all skill names from `skills/`
+- `lang: null` added to `settings.json` defaults — programming language pin, renamed from `language` to avoid collision with Claude Code's built-in `language` field (human response language). Updated in `agents/language-router.md`, `CLAUDE.md`, and `README.md`.
+
+## [0.3.1] - 2026-03-30
+
+### Added
+- added configs for broad set of tools for `reference` skills
+- include/exclude settings for agents and skills
+- plugin validator tests extended
 
 ### Changed
 - Collapsed the 8-line `## Skill filter` block in all 7 non-router agents into a single line — identical rule logic, no behaviour change
 - Consolidated `## Python guidance`, `## JavaScript guidance`, `## Go guidance` sections in `executor.md` into one shared "Execution principles" block + compact per-language constraints; style rules that were already covered by generation skills removed
 - Removed 6 decision-rule bullets from `reviewer.md` that duplicated the rule table in `docs/contracts/review-report.md` (already referenced by agents)
 - Added `skills/templates/generate-func.md` shared base template; `py-generate-func`, `js-generate-func`, and `go-generate-func` now declare `template: generate-func` and carry only language-specific content
-
-## [0.3.1] - 2026-03-21
-
-### Added
-- added configs for broad set of tools for `reference` skills
-- include/exclude settings for agents and skills
-- plugin validator tests extended
 
 ## [0.3.0] - 2026-03-20
 
