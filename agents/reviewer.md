@@ -64,6 +64,14 @@ Run `secrets-scan`, `owasp-check`, and `input-validation` on all changed files a
 
 If a security skill is excluded via `SKILLS_EXCLUDE`, note the omission in `### Security findings`: `"Skill <name> excluded via settings.json (skills.exclude)."`
 
+## Docker Security agent invocation
+
+After a PASS verdict, if any file changed by the Executor matches `Dockerfile`, `Dockerfile.*`, `docker-compose.yml`, `docker-compose.yaml`, `compose.yml`, `compose.yaml`, or `daemon.json`, and `pipeline.dockerSecurity: true` in settings.json (default: true), invoke the Docker Security agent.
+
+**Anti-loop guard**: If the Execution Summary contains `docker_security_fix: true`, skip the docker-security trigger for this review pass — the Executor was applying docker-bench fixes, and re-triggering would create an infinite loop.
+
+If `docker-security` appears in `AGENTS_DISABLED`, skip invocation and record in the "Next step" field: `"Docker Security agent disabled via settings.json (pipeline.disableAgents). Docker files changed but security audit skipped."`
+
 ## Iteration guard
 
 Track the current iteration count from the `Iteration: N` field in the Execution Summary, against `maxIterations` from the PIPELINE field (default: 3). If the limit is reached and the code is still not passing:

@@ -1,0 +1,35 @@
+{
+  "name": "docker-bench-security",
+  "description": "CIS Docker Benchmark auditing tool — checks Docker host, daemon, images, containers, and Swarm configuration against security best practices across all seven CIS sections",
+  "docs": {
+    "url": "https://github.com/docker/docker-bench-security",
+    "sections": [
+      "Section 1: Host Configuration",
+      "Section 2: Docker Daemon Configuration",
+      "Section 3: Docker Daemon Configuration Files",
+      "Section 4: Container Images and Build Files",
+      "Section 5: Container Runtime",
+      "Section 6: Docker Security Operations",
+      "Section 7: Docker Swarm Configuration"
+    ]
+  },
+  "github": {
+    "org": "docker",
+    "repo": "docker-bench-security",
+    "branch": "main"
+  },
+  "examples": [
+    "running a full CIS Docker Benchmark audit",
+    "host configuration checks",
+    "Docker daemon hardening",
+    "Dockerfile security review",
+    "container runtime privilege restrictions",
+    "Swarm TLS and manager configuration",
+    "CI/CD pipeline integration",
+    "interpreting WARN and INFO output"
+  ],
+  "config": {
+    "paths": ["docker-bench-security.sh"]
+  },
+  "aliases": ["docker-bench", "dbs"]
+}

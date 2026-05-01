@@ -1,6 +1,6 @@
 {
   "name": "uye",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Organisation-wide Claude Code plugin \u2014 multi-agent pipeline with language routing for Python, JavaScript, and Go.",
   "author": {
     "name": "uye",
@@ -23,6 +23,7 @@
     "./agents/reviewer.md",
     "./agents/debugger.md",
     "./agents/refactorer.md",
-    "./agents/performance.md"
+    "./agents/performance.md",
+    "./agents/docker-security.md"
   ]
 }

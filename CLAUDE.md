@@ -28,6 +28,11 @@ Language Router → Context → Planner → Executor → Reviewer (+ security ga
 * Performance: FIX_NOW routes a structured fix request to Executor → Reviewer.
   MEASURE_FIRST surfaces profiling commands to user without touching code.
   Auto-triggers: Reviewer ≥ 2 major perf issues; autoPerformance=true; Planner hot path; user request.
+
+§ Docker Security: FIX_NOW routes auto-fixable CIS findings to Executor → Reviewer (with docker_security_fix flag to prevent re-trigger).
+  REVIEW_REQUIRED surfaces MANUAL findings (host/ops/Swarm) to user without touching code.
+  Auto-triggers: Reviewer PASS when Docker files changed + dockerSecurity=true; explicit user request.
+  Covers all CIS §1–§7: static analysis (§2–§5) always; live docker-bench-security (§1–§7) best-effort.
 ```
 
 **Key principle**: agents are language-agnostic. Language Router selects the correct
@@ -47,7 +52,8 @@ skill set for Executor and Reviewer. All other agents use common skills only.
 | `pipeline.autoPerformance` | `false` | Run Performance agent automatically after every PASS |
 | `pipeline.maxIterations` | `3` | Max Executor↔Reviewer round trips before `BLOCKED` |
 | `pipeline.maxDebugCycles` | `2` | Max DEBUG decisions before Reviewer emits `BLOCKED` instead of re-escalating |
-| `pipeline.disableAgents` | `[]` | Optional-stage agents to skip: `refactorer`, `performance`, `debugger`. Does not apply to core agents. |
+| `pipeline.dockerSecurity` | `true` | Auto-trigger Docker Security agent after Reviewer PASS when Docker files change. Set `false` for explicit-only invocation. |
+| `pipeline.disableAgents` | `[]` | Optional-stage agents to skip: `refactorer`, `performance`, `debugger`, `docker-security`. Does not apply to core agents. |
 | `context.maxFiles` | `20` | Max files Context agent reads fully; extras are noted but skipped |
 | `tools` | `[]` | Enable reference skills: `["postgres", "redis"]`. Supports version pinning: `[{"name": "redis", "version": "7.2"}]` — overrides `github.branch` for source lookups |
 | `skills.exclude` | `[]` | Skill names (by `name` frontmatter) never to invoke across all agents. E.g. `["secrets-scan", "py-check-bugs"]` |

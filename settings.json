@@ -8,7 +8,8 @@
     "autoPerformance": false,
     "maxIterations": 3,
     "maxDebugCycles": 2,
-    "disableAgents": []
+    "disableAgents": [],
+    "dockerSecurity": true
   },
   "context": {
     "maxFiles": 20

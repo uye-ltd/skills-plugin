@@ -168,7 +168,7 @@ while IFS= read -r skill_file; do
     for token in "${used_by_tokens[@]}"; do
       [ -z "$token" ] && continue
       case "$token" in
-        executor|reviewer|refactorer|debugger|performance|context|planner|standalone) ;;
+        executor|reviewer|refactorer|debugger|performance|context|planner|docker-security|standalone) ;;
         *) warning "$rel: unknown used-by value '$token'" ;;
       esac
     done
@@ -263,8 +263,9 @@ contract_for_agent() {
     reviewer)        echo "review-report" ;;
     debugger)        echo "debug-report" ;;
     refactorer)      echo "refactoring-summary" ;;
-    performance)     echo "performance-report" ;;
-    *)               echo "" ;;
+    performance)       echo "performance-report" ;;
+    docker-security)   echo "docker-security-report" ;;
+    *)                 echo "" ;;
   esac
 }
 

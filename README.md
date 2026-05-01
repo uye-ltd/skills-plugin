@@ -71,25 +71,29 @@ Multi-agent pipeline with language routing for Python, JavaScript, and Go.
               │                        │ verify-tests  │  ← after each step
               │                        └───────────────┘
               │
-              │◄── fix ─────────────────────┐
-              ▼                             │
-      ┌───────────────┐             ┌───────────────┐
-      │   Debugger    │             │  Performance† │
-      │ ──────────── │             │ ──────────── │
-      │ analyze-trace │             │ analyze-compl │
-      │ trace-vars    │             │ suggest-cache │
-      │ detect-bugs   │             │ detect-n+1    │
-      └───────────────┘             └──────┬────────┘
-                                           │ FIX_NOW
-                                           ▼
-                                    ┌───────────────┐
-                                    │   Executor    │  applies perf fix
+              │◄── fix ──────────────────────────────────────────────────┐
+              ▼                             │                           │
+      ┌───────────────┐             ┌───────────────┐   ┌──────────────────────┐
+      │   Debugger    │             │  Performance† │   │  Docker Security§    │
+      │ ──────────── │             │ ──────────── │   │ ──────────────────── │
+      │ analyze-trace │             │ analyze-compl │   │ docker-bench-review  │
+      │ trace-vars    │             │ suggest-cache │   │ docker-bench-run     │
+      │ detect-bugs   │             │ detect-n+1    │   └──────────┬───────────┘
+      └───────────────┘             └──────┬────────┘              │ FIX_NOW
+                                           │ FIX_NOW               ▼
+                                           ▼               ┌───────────────┐
+                                    ┌───────────────┐      │   Executor    │  applies CIS fix
+                                    │   Executor    │      └───────────────┘
                                     └───────────────┘
 
 † Performance triggers when: Reviewer raises ≥ 2 major perf issues;
   pipeline.autoPerformance: true and Reviewer issues PASS;
   Planner detects a hot path; or user explicitly requests it.
   FIX_NOW routes to Executor. MEASURE_FIRST surfaces profiling commands to user.
+
+§ Docker Security triggers when: Reviewer PASS + any Docker file changed + pipeline.dockerSecurity: true; or explicit user request.
+  FIX_NOW routes fixable CIS §2/§4/§5 findings to Executor. REVIEW_REQUIRED surfaces §1/§3/§6/§7 MANUAL findings to user.
+  Static analysis (§2–§5) always runs; live docker-bench-security (§1–§7) is best-effort.
 ```
 
 ---
@@ -188,6 +192,7 @@ Performance analysis is triggered automatically when the Reviewer flags ≥ 2 ma
 | `debugger` | Traces errors, tracks vars, finds root causes | Via routed skills |
 | `refactorer` | Extract, split, dedup, rename, type | Via routed skills |
 | `performance` | Complexity, caching, N+1, vectorisation, allocations | Via routed skills |
+| `docker-security` | CIS Docker Benchmark audit — static + live; routes FIXABLE CIS findings to Executor | No |
 
 Agent handoff schemas are in [`docs/contracts/`](docs/contracts/).
 
@@ -227,6 +232,8 @@ Skills are invoked as `/uye:<skill-name>` or automatically by the pipeline agent
 | | `dependency-audit` | — |
 | | `input-validation` | Reviewer |
 | | `auth-review` | — |
+| | `docker-bench-review` | docker-security, Reviewer |
+| | `docker-bench-run` | docker-security |
 | `reference` | `reference-docs` | standalone |
 | | `reference-help` | standalone |
 | | `reference-sourcecode` | standalone |
@@ -290,6 +297,7 @@ Skills are invoked as `/uye:<skill-name>` or automatically by the pipeline agent
 | `pipeline.autoPerformance` | `false` | Run Performance agent automatically after every PASS |
 | `pipeline.maxIterations` | `3` | Max Executor↔Reviewer round trips before `BLOCKED` |
 | `pipeline.maxDebugCycles` | `2` | Max DEBUG decisions before Reviewer emits `BLOCKED` instead of re-escalating |
+| `pipeline.dockerSecurity` | `true` | Auto-trigger Docker Security agent after Reviewer PASS when Docker files change. Set `false` for explicit-only invocation. |
 | `context.maxFiles` | `20` | Max files Context agent reads fully; extras are noted but skipped |
 | `tools` | `[]` | Enable reference skills: `["postgres", "redis"]`. Supports version pinning: `[{"name": "redis", "version": "7.2"}]` — overrides `github.branch` for source and config lookups. See [`docs/tools-config.md`](docs/tools-config.md) for all bundled tools |
 
@@ -349,6 +357,7 @@ Reference skills activate for tools listed in `settings.json → tools`. All def
 | `portainer` | Infra | Container management UI — Docker and Kubernetes environments, stacks, and RBAC |
 | `crowdsec` | Security | Collaborative security engine — behavior detection, bouncers, scenarios, and CAPI sharing |
 | `trivy` | Security | Vulnerability scanner — containers, IaC, SBOMs, and secret detection |
+| `docker-bench-security` | Security | CIS Docker Benchmark auditing tool — host, daemon, images, containers, and Swarm across all seven CIS sections |
 
 See [`docs/tools-config.md`](docs/tools-config.md) for the full schema and how to add new tools.
 
@@ -443,6 +452,20 @@ After installing into a repo, create or edit `.claude/settings.json` in that rep
 }
 ```
 
+**Disable Docker security auto-audit** (run it explicitly only):
+```json
+"uye": {
+  "pipeline": { "dockerSecurity": false }
+}
+```
+
+**Disable the docker-security agent entirely** (skip even when explicitly requested):
+```json
+"uye": {
+  "pipeline": { "disableAgents": ["docker-security"] }
+}
+```
+
 **Terse output** — less explanation, more code:
 ```json
 "uye": { "outputStyle": "Concise" }
@@ -480,6 +503,7 @@ Version-pin a tool to get source lookups against a specific tag:
 | `pipeline.autoPerformance` | `false` | `true` to always run Performance after a PASS |
 | `pipeline.maxIterations` | `3` | Raise for stubborn reviews; lower to fail fast |
 | `pipeline.maxDebugCycles` | `2` | Raise if Debugger needs more passes on hard bugs |
+| `pipeline.dockerSecurity` | `true` | Set `false` to disable Docker security auto-trigger (explicit-only) |
 | `context.maxFiles` | `20` | Raise for large monorepos; lower to save tokens |
 | `tools` | `[]` | List tool names (or `{"name","version"}` objects) to activate reference skills |
 
@@ -596,7 +620,8 @@ skills-plugin/
 │   ├── reviewer.md
 │   ├── debugger.md
 │   ├── refactorer.md
-│   └── performance.md
+│   ├── performance.md
+│   └── docker-security.md
 ├── config/
 │   └── tools/                        # one JSON definition per supported tool
 ├── docs/
@@ -608,7 +633,8 @@ skills-plugin/
 │   │   ├── review-report.md
 │   │   ├── debug-report.md
 │   │   ├── refactoring-summary.md
-│   │   └── performance-report.md
+│   │   ├── performance-report.md
+│   │   └── docker-security-report.md
 │   ├── severity-mappings.md          # severity levels + language-specific pattern tables
 │   └── tools-config.md               # tool definition schema + enable-tool usage
 ├── skills/
@@ -618,7 +644,7 @@ skills-plugin/
 │   │   ├── performance/              # suggest-cache, detect-n-plus-one
 │   │   ├── docs/                     # docs-write, docs-review, …
 │   │   ├── devops/                   # dockerfile, ci-pipeline, k8s, …
-│   │   ├── security/                 # infra/boundary-level: owasp-check, input-validation, …
+│   │   ├── security/                 # owasp-check, input-validation, docker-bench-review, docker-bench-run, …
 │   │   └── reference/               # reference-docs, reference-help, reference-sourcecode,
 │                                #   reference-api, reference-changelog, reference-config,
 │                                #   reference-examples, reference-list

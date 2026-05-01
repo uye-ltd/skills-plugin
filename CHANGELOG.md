@@ -1,34 +1,24 @@
+## [0.3.3] - 2026-05-01
+
+### Added
+- `docker-security` agent — full CIS Docker Benchmark audit (all seven sections §1–§7); orchestrates static and live analysis, classifies findings as FIXABLE or MANUAL, and routes fixable ones to Executor via a structured Docker Security Fix Request
+- `docker-bench-review` skill — static CIS §2–§5 analysis of Dockerfiles, `docker-compose.yml`, and `daemon.json` without requiring a running Docker host; detects `privileged: true`, host namespace sharing, missing `USER`/`HEALTHCHECK`, `ADD` vs `COPY`, secrets in `ENV`, unversioned packages, and `daemon.json` misconfigurations
+- `docker-bench-run` skill — executes `docker-bench-security` (native or container mode) against the live Docker host and parses all §1–§7 CIS-numbered findings; emits `TOOL_UNAVAILABLE` gracefully when Docker is inaccessible
+- `config/tools/docker-bench-security.json` — tool definition making docker-bench-security available in all eight reference skills (`reference-docs`, `reference-sourcecode`, etc.)
+- `docs/contracts/docker-security-report.md` — output contract for the docker-security agent; defines `CLEAN`, `FIX_NOW`, and `REVIEW_REQUIRED` outcomes, the Docker Security Fix Request block format, and severity quick-reference
+- Anti-loop guard: Executor sets `docker_security_fix: true` in Execution Summary after a docker-bench fix pass; Reviewer skips the docker-security auto-trigger on that review pass to prevent infinite loops
+
+### Changed
+- `agents/reviewer.md` — auto-triggers docker-security agent after PASS when any changed file is a `Dockerfile`, `docker-compose.yml`, or `daemon.json`, and `pipeline.dockerSecurity: true`; respects `docker_security_fix: true` anti-loop guard and `pipeline.disableAgents`
+- `settings.json` — `pipeline.dockerSecurity: true` added (default on; set `false` for explicit-only invocation)
+- `.claude-plugin/plugin.json` — docker-security agent registered in the `agents` array
+- `scripts/validate.sh` — `docker-security` added as a valid `used-by` value and mapped to its contract in the contract-lookup table
+- `CLAUDE.md` — architecture diagram and configuration table updated with docker-security and `pipeline.dockerSecurity`
+
 ## [0.3.2] - 2026-04-28
 
 ### Added
-- TODO: list new skills, agents, or features
-
-### Changed
-- TODO: list modified behaviour
-
-### Fixed
-- TODO: list bug fixes
-
-### Commits since 
-- f836480 release: v0.3.1
-- ee6faca feat: hooks for docs autoupdate v0.3.1
-- 2841423 feat: major update v0.3.0
-- 80b9f67 feat: reference skills major update
-- ed53820 feat: v0.2.1
-- eb6bae8 feat: reference skills
-- 4a5d0b6 refactor: major refactor
-- 5d33ba8 refactor: major refactor
-- bb3fff5 refactor: major refactor
-- b73ea4e feat: common skills and agents clenup
-- 52a840a feat: styleguide for python, go, js
-- e7ca22a feat: initial structure
-- 4a42a34 Initial commit
-
-## [Unreleased]
-
-### Added
 - statusline script (`scripts/statusline-command.sh`) bundled into the plugin; `install.sh` now copies it to `~/.claude/statusline-command.sh` and wires `statusLine` into `~/.claude/settings.json`; `update.sh` syncs it on each run
-
 - statusline formatted as colored `~/Dev/uye/skills-plugin main* sonnet4.6 63%/21%/50% 87k/$3.72 3:10am/01-05T3:00am`
 - `install.sh` now injects all plugin defaults into the target project's `.claude/settings.json` after installation — every configurable key (`agent`, `outputStyle`, `language`, `pipeline.*`, `context.maxFiles`, `tools`, `skills.*`) is pre-filled so users can edit or delete as needed; re-running install is safe (existing project values win on collision); `tools` is populated with all tool names from `config/tools/` and `skills.include` with all skill names from `skills/`
 - `lang: null` added to `settings.json` defaults — programming language pin, renamed from `language` to avoid collision with Claude Code's built-in `language` field (human response language). Updated in `agents/language-router.md`, `CLAUDE.md`, and `README.md`.
